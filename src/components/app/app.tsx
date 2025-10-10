@@ -40,7 +40,7 @@ function App(props: AppProps): JSX.Element {
           element={<OfferScreen />}
         />
         <Route
-          path='*'
+          path={AppRoute.NotFound}
           element={<NotFoundScreen />}
         />
       </Routes>
