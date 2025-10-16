@@ -1,5 +1,5 @@
 export type Place = {
-  id: number;
+  id: string;
   imgSrc: string;
   mark?: string;
   priceValue: number;
@@ -7,3 +7,10 @@ export type Place = {
   description: string;
   type: string;
 }
+
+export type CityPlaces = {
+  cityName: string;
+  places: Place[];
+}
+
+

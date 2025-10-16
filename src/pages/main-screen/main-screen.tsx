@@ -1,12 +1,12 @@
-import PlaceCard from '../../components/place-card/place-card';
 import {Place} from '../../types';
+import PlaceCardList from '../../components/place-list/place-list.tsx';
 
 type MainScreenProps = {
   places: Place[];
   placesCount: number;
 }
 
-function MainScreen(props: MainScreenProps): JSX.Element {
+function MainScreen({places, placesCount}: MainScreenProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -96,13 +96,7 @@ function MainScreen(props: MainScreenProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                {props.places.slice(0, props.placesCount).map((place) => (
-                  <PlaceCard key={place.id} imgSrc={place.imgSrc} mark={place.mark} priceValue={place.priceValue}
-                    priceText={place.priceText} description={place.description} type={place.type}
-                  />
-                ))}
-              </div>
+              <PlaceCardList count={placesCount} places={places}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
