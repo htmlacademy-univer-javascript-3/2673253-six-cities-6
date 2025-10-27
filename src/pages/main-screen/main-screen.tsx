@@ -1,12 +1,24 @@
 import PlaceCardList from '../../components/place-list/place-list.tsx';
 import {Offer} from '../../types/offer.ts';
 import Header from '../../components/header/header.tsx';
+import Map from '../../components/map/map.tsx';
+import {useState} from 'react';
+import {Location} from '../../types/location.ts';
 
 type MainScreenProps = {
   offers: Offer[];
 }
 
 function MainScreen({offers}: MainScreenProps): JSX.Element {
+  const locations = offers.map((offer) => offer.location);
+
+  const [selectedPoint, setSelectedPoint] = useState<Location | null>(null);
+
+  const handleListItemHover = (id: string) => {
+    const currentLocation = offers.find((offer) => offer.id === id);
+    setSelectedPoint(currentLocation?.location ?? null);
+  };
+
   return (
     <div className="page page--gray page--main">
       <Header isMain/>
@@ -69,11 +81,9 @@ function MainScreen({offers}: MainScreenProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <PlaceCardList places={offers}/>
+              <PlaceCardList places={offers} onListItemHover={handleListItemHover} />
             </section>
-            <div className="cities__right-section">
-              <section className="cities__map map"></section>
-            </div>
+            <Map locations={locations} city={locations[0]} selectedPoint={selectedPoint}/>
           </div>
         </div>
       </main>
