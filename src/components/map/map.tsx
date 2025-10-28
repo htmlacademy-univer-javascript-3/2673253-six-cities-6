@@ -46,7 +46,8 @@ function Map({locations, city, selectedPoint}: mapProps): JSX.Element {
   }, [map, locations, defaultCustomIcon, selectedPoint, currentCustomIcon]);
 
   return (
-    <div className="cities__right-section" ref={mapRef}>
+    <div className="cities__right-section">
+      <section className="cities__map" ref={mapRef}></section>
     </div>
   );
 }
