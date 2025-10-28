@@ -10,11 +10,12 @@ type mapProps = {
   locations: Location[];
   city: Location;
   selectedPoint: Location | null;
+  className: string;
 }
 
-function Map({locations, city, selectedPoint}: mapProps): JSX.Element {
+function Map(props: mapProps): JSX.Element {
   const mapRef = useRef(null);
-  const map = useMap(mapRef, city);
+  const map = useMap(mapRef, props.city);
 
   const defaultCustomIcon = leaflet.icon({
     iconUrl: URL_MARKER_DEFAULT,
@@ -30,25 +31,23 @@ function Map({locations, city, selectedPoint}: mapProps): JSX.Element {
 
   useEffect(() => {
     if (map) {
-      locations.forEach((point) => {
+      props.locations.forEach((point) => {
         leaflet
           .marker({
             lat: point.latitude,
             lng: point.longitude,
           }, {
-            icon: (selectedPoint && point.longitude === selectedPoint.longitude && point.latitude === selectedPoint.latitude)
+            icon: (props.selectedPoint && point.longitude === props.selectedPoint.longitude && point.latitude === props.selectedPoint.latitude)
               ? currentCustomIcon
               : defaultCustomIcon,
           })
           .addTo(map);
       });
     }
-  }, [map, locations, defaultCustomIcon, selectedPoint, currentCustomIcon]);
+  }, [map, props.locations, defaultCustomIcon, props.selectedPoint, currentCustomIcon]);
 
   return (
-    <div className="cities__right-section">
-      <section className="cities__map" ref={mapRef}></section>
-    </div>
+    <section className={props.className} ref={mapRef}></section>
   );
 }
 
