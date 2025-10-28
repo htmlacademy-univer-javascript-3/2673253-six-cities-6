@@ -83,7 +83,7 @@ function MainScreen({offers}: MainScreenProps): JSX.Element {
               </form>
               <PlaceCardList places={offers} onListItemHover={handleListItemHover} />
             </section>
-            <Map locations={locations} city={locations[0]} selectedPoint={selectedPoint}/>
+            <Map locations={locations} city={offers[0].city.location} selectedPoint={selectedPoint}/>
           </div>
         </div>
       </main>

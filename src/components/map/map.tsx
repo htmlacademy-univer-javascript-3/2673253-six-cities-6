@@ -43,7 +43,7 @@ function Map({locations, city, selectedPoint}: mapProps): JSX.Element {
           .addTo(map);
       });
     }
-  }, [map, locations, defaultCustomIcon]);
+  }, [map, locations, defaultCustomIcon, selectedPoint, currentCustomIcon]);
 
   return (
     <div className="cities__right-section" ref={mapRef}>
