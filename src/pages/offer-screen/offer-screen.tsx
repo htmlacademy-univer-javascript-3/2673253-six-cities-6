@@ -197,7 +197,7 @@ function OfferScreen(): JSX.Element {
               </section>
             </div>
           </div>
-          <Map locations={locations} city={offer.city.location} selectedPoint={selectedPoint} className="offer__map"/>
+          <Map locations={locations} city={offer.city.location} selectedPoint={selectedPoint} className="offer"/>
         </section>
         <div className="container">
           <section className="near-places places">
