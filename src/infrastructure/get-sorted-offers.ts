@@ -19,6 +19,6 @@ function getSortedOffers(offers: Offer[], sorting: SortingOption) {
       return offers;
     }
   }
-};
+}
 
 export default getSortedOffers;
