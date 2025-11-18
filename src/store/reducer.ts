@@ -1,12 +1,14 @@
-import { createReducer } from '@reduxjs/toolkit';
+import {createReducer} from '@reduxjs/toolkit';
 import {Offers} from '../mocks/offers.ts';
-import {changeCityAction, fillPlacesAction} from './actions.ts';
+import {changeCityAction, changeSortingAction, fillPlacesAction} from './actions.ts';
 import {Offer} from '../types/offer.ts';
-import { City } from '../types/city.ts';
+import {City} from '../types/city.ts';
+import {SortingOption} from '../const.ts';
 
 type stateCityProps = {
   city: City;
   places: Offer[];
+  sorting: SortingOption;
 }
 
 const stateCity: stateCityProps = {
@@ -18,7 +20,8 @@ const stateCity: stateCityProps = {
       zoom: 12
     }
   },
-  places: Offers.filter((offer: Offer) => offer.city.name === 'Paris')
+  places: Offers.filter((offer: Offer) => offer.city.name === 'Paris'),
+  sorting: SortingOption.Popular
 };
 
 export const reducer = createReducer(stateCity, (builder) => {
@@ -28,5 +31,8 @@ export const reducer = createReducer(stateCity, (builder) => {
     })
     .addCase(fillPlacesAction, (state, action) => {
       state.places = action.payload;
+    })
+    .addCase(changeSortingAction, (state, action) => {
+      state.sorting = action.payload;
     });
 });

@@ -1,27 +1,16 @@
 import PlaceCard from '../place-card/place-card.tsx';
-import {useState} from 'react';
 import {useAppSelector} from '../../hooks';
+import getSortedOffers from '../../infrastructure/get-sorted-offers.ts';
 
 type placeListProps = {
-  onListItemHover: (id: string) => void;
+  onListItemHover: (id: string | null) => void;
 }
 
 function PlaceList({onListItemHover}: placeListProps) {
-  const [, setActiveId] = useState<string | null>(null);
-  const places = useAppSelector((state) => state.places);
-
-  const handleMouseEnter = (id: string) => {
-    setActiveId(id);
-    onListItemHover(id);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveId(null);
-    onListItemHover('');
-  };
+  const currentState = useAppSelector((state) => state);
+  const places = getSortedOffers(currentState.places, currentState.sorting);
 
   return (
-
     <div className="cities__places-list places__list tabs__content">
       {places.map((place) => (
         <PlaceCard
@@ -33,8 +22,8 @@ function PlaceList({onListItemHover}: placeListProps) {
           price={place.price}
           title={place.title}
           type={place.type}
-          onMouseEnter={() => handleMouseEnter(place.id)}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={() => onListItemHover(place.id)}
+          onMouseLeave={() => onListItemHover(null)}
           className={'cities'}
         />
       ))}
