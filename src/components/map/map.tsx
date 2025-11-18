@@ -13,8 +13,9 @@ type mapProps = {
 
 function Map({activeId, className}: mapProps): JSX.Element {
   const mapRef = useRef(null);
-  const currentCity = useAppSelector((state) => state);
-  const map = useMap(mapRef, currentCity.city.location);
+  const markersLayerRef = useRef<leaflet.LayerGroup | null>(null);
+  const currentState = useAppSelector((state) => state);
+  const map = useMap(mapRef, currentState.city.location);
 
   const defaultCustomIcon = leaflet.icon({
     iconUrl: URL_MARKER_DEFAULT,
@@ -30,20 +31,26 @@ function Map({activeId, className}: mapProps): JSX.Element {
 
   useEffect(() => {
     if (map) {
-      currentCity.places.forEach((offer) => {
+      if (!markersLayerRef.current) {
+        markersLayerRef.current = leaflet.layerGroup().addTo(map);
+      }
+      const layer = markersLayerRef.current;
+      layer.clearLayers();
+      currentState.places.forEach((offer) => {
         leaflet
-          .marker({
-            lat: offer.location.latitude,
-            lng: offer.location.longitude,
-          }, {
-            icon: (offer.id === activeId)
-              ? currentCustomIcon
-              : defaultCustomIcon,
-          })
-          .addTo(map);
+          .marker(
+            {
+              lat: offer.location.latitude,
+              lng: offer.location.longitude,
+            },
+            {
+              icon: offer.id === activeId ? currentCustomIcon : defaultCustomIcon,
+            }
+          )
+          .addTo(layer);
       });
     }
-  }, [map, defaultCustomIcon, currentCustomIcon, currentCity.places, activeId]);
+  }, [map, currentState.places, activeId, defaultCustomIcon, currentCustomIcon]);
 
   return (
     <section className={`${className}__map`} ref={mapRef}></section>
