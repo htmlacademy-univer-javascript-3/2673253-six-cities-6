@@ -32,7 +32,7 @@ function useMap(mapRef: RefObject<HTMLDivElement>, city: Location) {
 
   useEffect(() => {
     if (map) {
-      map.flyTo(
+      map.setView(
         {
           lat: city.latitude,
           lng: city.longitude,
