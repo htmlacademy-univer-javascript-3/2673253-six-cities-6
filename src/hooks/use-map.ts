@@ -1,5 +1,4 @@
 import leaflet from 'leaflet';
-
 import {RefObject, useEffect, useRef, useState} from 'react';
 import {Location} from '../types/location.ts';
 
@@ -29,7 +28,19 @@ function useMap(mapRef: RefObject<HTMLDivElement>, city: Location) {
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [city.latitude, city.longitude, city.zoom, mapRef]);
+
+  useEffect(() => {
+    if (map) {
+      map.flyTo(
+        {
+          lat: city.latitude,
+          lng: city.longitude,
+        },
+        city.zoom,
+      );
+    }
+  }, [map, city]);
 
   return map;
 }

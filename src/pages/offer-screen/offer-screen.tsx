@@ -6,7 +6,6 @@ import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
 import {Offers} from '../../mocks/offers.ts';
 import {useState} from 'react';
-import {Location} from '../../types/location.ts';
 import NearbyPlacesList from '../../components/nearby-places-list/nearby-places-list.tsx';
 
 function OfferScreen(): JSX.Element {
@@ -80,14 +79,8 @@ function OfferScreen(): JSX.Element {
   ];
 
   const nearOffers = structuredClone(Offers).slice(0, 3);
-  const locations = nearOffers.map((i) => i.location);
 
-  const [selectedPoint, setSelectedPoint] = useState<Location | null>(null);
-
-  const handleListItemHover = (id: string) => {
-    const currentLocation = nearOffers.find((i) => i.id === id);
-    setSelectedPoint(currentLocation?.location ?? null);
-  };
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   if (offer === null) {
     return <Navigate to="/404" />;
@@ -197,12 +190,12 @@ function OfferScreen(): JSX.Element {
               </section>
             </div>
           </div>
-          <Map locations={locations} city={offer.city.location} selectedPoint={selectedPoint} className="offer"/>
+          <Map activeId={activeId} className="offer"/>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearbyPlacesList places={nearOffers} onListItemHover={handleListItemHover}/>
+            <NearbyPlacesList places={nearOffers} onListItemHover={setActiveId}/>
           </section>
         </div>
       </main>
