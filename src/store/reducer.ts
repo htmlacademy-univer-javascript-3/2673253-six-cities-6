@@ -1,21 +1,22 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Offers} from '../mocks/offers.ts';
 import {
   changeCityAction,
   changeSortingAction,
   loadPlacesAction,
   requireAuthorizationAction,
-  setErrorAction, setOffersDataLoadingStatusAction
+  setErrorAction, setOffersDataLoadingStatusAction, setUserAction
 } from './actions.ts';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
 import {AuthorizationStatus, SortingOption} from '../const.ts';
+import {UserData} from '../types/user-data.ts';
 
 type stateCityProps = {
   city: City;
   places: Offer[];
   sorting: SortingOption;
   authorizationStatus: AuthorizationStatus;
+  user: UserData | null;
   error: string | null;
   isOffersDataLoading: boolean;
 }
@@ -29,9 +30,10 @@ const stateCity: stateCityProps = {
       zoom: 12
     }
   },
-  places: Offers.filter((offer: Offer) => offer.city.name === 'Paris'),
+  places: [],
   sorting: SortingOption.Popular,
   authorizationStatus: AuthorizationStatus.Unknown,
+  user: null,
   error: null,
   isOffersDataLoading: false
 };
@@ -55,5 +57,8 @@ export const reducer = createReducer(stateCity, (builder) => {
     })
     .addCase(setOffersDataLoadingStatusAction, (state, action) => {
       state.isOffersDataLoading = action.payload;
+    })
+    .addCase(setUserAction, (state, action) => {
+      state.user = action.payload;
     });
 });

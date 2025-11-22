@@ -1,5 +1,5 @@
 import MainScreen from '../../pages/main-screen/main-screen';
-import {Route, BrowserRouter, Routes} from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import LoginScreen from '../../pages/login-screen/login-screen.tsx';
 import FavoritesScreen from '../../pages/favorites-screen/favorites-screen.tsx';
@@ -9,6 +9,8 @@ import PrivateRoute from '../private-route/private-route.tsx';
 import {Offer} from '../../types/offer.ts';
 import {useAppSelector} from '../../hooks';
 import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
+import browserHistory from '../../browser-history.ts';
+import HistoryRouter from '../history-router/history-router.tsx';
 
 type AppProps = {
   offers: Offer[];
@@ -25,7 +27,7 @@ function App(props: AppProps): JSX.Element {
   }
 
   return (
-    <BrowserRouter>
+    <HistoryRouter history={browserHistory}>
       <Routes>
         <Route
           path={AppRoute.Main}
@@ -38,7 +40,7 @@ function App(props: AppProps): JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
+            <PrivateRoute route={AppRoute.Favorites}>
               <FavoritesScreen offers={props.offers}/>
             </PrivateRoute>
           }
@@ -52,7 +54,7 @@ function App(props: AppProps): JSX.Element {
           element={<NotFoundScreen />}
         />
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 
