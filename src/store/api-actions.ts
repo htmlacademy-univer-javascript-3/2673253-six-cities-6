@@ -6,7 +6,12 @@ import {AuthData} from '../types/auth-data';
 import {UserData} from '../types/user-data';
 import {Offer} from '../types/offer.ts';
 import {APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR} from '../const.ts';
-import {loadPlacesAction, requireAuthorizationAction, setErrorAction} from './actions.ts';
+import {
+  loadPlacesAction,
+  requireAuthorizationAction,
+  setErrorAction,
+  setOffersDataLoadingStatusAction
+} from './actions.ts';
 import {store} from './index.ts';
 
 
@@ -25,9 +30,11 @@ export const fetchOffersAction = createAsyncThunk<void, undefined, {
   state: State;
   extra: AxiosInstance;
 }>(
-  'data/fetchQuestions',
+  'data/fetchOffers',
   async (_arg, {dispatch, extra: api}) => {
+    dispatch(setOffersDataLoadingStatusAction(true));
     const {data} = await api.get<Offer[]>(APIRoute.Offers);
+    dispatch(setOffersDataLoadingStatusAction(false));
     dispatch(loadPlacesAction(data));
   },
 );

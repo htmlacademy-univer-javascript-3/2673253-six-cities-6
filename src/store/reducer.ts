@@ -5,7 +5,7 @@ import {
   changeSortingAction,
   loadPlacesAction,
   requireAuthorizationAction,
-  setErrorAction
+  setErrorAction, setOffersDataLoadingStatusAction
 } from './actions.ts';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
@@ -17,6 +17,7 @@ type stateCityProps = {
   sorting: SortingOption;
   authorizationStatus: AuthorizationStatus;
   error: string | null;
+  isOffersDataLoading: boolean;
 }
 
 const stateCity: stateCityProps = {
@@ -32,6 +33,7 @@ const stateCity: stateCityProps = {
   sorting: SortingOption.Popular,
   authorizationStatus: AuthorizationStatus.Unknown,
   error: null,
+  isOffersDataLoading: false
 };
 
 export const reducer = createReducer(stateCity, (builder) => {
@@ -50,5 +52,8 @@ export const reducer = createReducer(stateCity, (builder) => {
     })
     .addCase(setErrorAction, (state, action) => {
       state.error = action.payload;
+    })
+    .addCase(setOffersDataLoadingStatusAction, (state, action) => {
+      state.isOffersDataLoading = action.payload;
     });
 });

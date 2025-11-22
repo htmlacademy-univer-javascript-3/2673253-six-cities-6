@@ -17,3 +17,5 @@ export const requireAuthorizationAction = createAction('user/requireAuthorizatio
   payload: status
 }));
 export const setErrorAction = createAction<string | null>('global/setError');
+export const setOffersDataLoadingStatusAction = createAction<boolean>('data/setOffersDataLoadingStatus');
+

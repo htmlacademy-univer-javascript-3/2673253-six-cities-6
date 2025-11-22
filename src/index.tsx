@@ -5,12 +5,13 @@ import {Offers} from './mocks/offers.ts';
 import {Provider} from 'react-redux';
 import {store} from './store';
 import ErrorMessage from './components/error-message/error-message.tsx';
-import {checkAuthAction} from './store/api-actions';
+import {checkAuthAction, fetchOffersAction} from './store/api-actions';
 
 const Settings = {
   Places: Offers,
 } as const;
 
+store.dispatch(fetchOffersAction());
 store.dispatch(checkAuthAction());
 
 const root = ReactDOM.createRoot(
