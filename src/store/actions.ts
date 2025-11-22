@@ -1,15 +1,18 @@
 import { createAction } from '@reduxjs/toolkit';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
-import {SortingOption} from '../const.ts';
+import {AuthorizationStatus, SortingOption} from '../const.ts';
 
 
-export const changeCityAction = createAction('changeCity', (city: City) => ({
+export const changeCityAction = createAction('data/changeCity', (city: City) => ({
   payload: city,
 }));
-export const fillPlacesAction = createAction('fillPlaces', (places : Offer[]) => ({
+export const loadPlacesAction = createAction('data/loadPlaces', (places : Offer[]) => ({
   payload: places
 }));
-export const changeSortingAction = createAction('changeSorting', (places : SortingOption) => ({
+export const changeSortingAction = createAction('data/changeSorting', (places : SortingOption) => ({
   payload: places
+}));
+export const requireAuthorizationAction = createAction('user/requireAuthorization', (status: AuthorizationStatus) => ({
+  payload: status
 }));

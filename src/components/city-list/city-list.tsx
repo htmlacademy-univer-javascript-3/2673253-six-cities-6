@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {changeCityAction, changeSortingAction, fillPlacesAction} from '../../store/actions.ts';
+import {changeCityAction, changeSortingAction, loadPlacesAction} from '../../store/actions.ts';
 import {City} from '../../types/city.ts';
 import {Offers} from '../../mocks/offers.ts';
 import {SortingOption} from '../../const.ts';
@@ -20,7 +20,7 @@ function CityList({cities}: CityListProps) {
 
   const cityClickHandle = (cityName: City['name']) => {
     dispatch(changeCityAction(cityMap[cityName]));
-    dispatch(fillPlacesAction(Offers.filter((offer) => offer.city.name === cityName)));
+    dispatch(loadPlacesAction(Offers.filter((offer) => offer.city.name === cityName)));
     dispatch(changeSortingAction(SortingOption.Popular));
   };
 

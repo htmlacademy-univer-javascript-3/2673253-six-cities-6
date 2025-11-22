@@ -1,14 +1,15 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {Offers} from '../mocks/offers.ts';
-import {changeCityAction, changeSortingAction, fillPlacesAction} from './actions.ts';
+import {changeCityAction, changeSortingAction, loadPlacesAction, requireAuthorizationAction} from './actions.ts';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
-import {SortingOption} from '../const.ts';
+import {AuthorizationStatus, SortingOption} from '../const.ts';
 
 type stateCityProps = {
   city: City;
   places: Offer[];
   sorting: SortingOption;
+  authorizationStatus: AuthorizationStatus;
 }
 
 const stateCity: stateCityProps = {
@@ -21,7 +22,8 @@ const stateCity: stateCityProps = {
     }
   },
   places: Offers.filter((offer: Offer) => offer.city.name === 'Paris'),
-  sorting: SortingOption.Popular
+  sorting: SortingOption.Popular,
+  authorizationStatus: AuthorizationStatus.Unknown
 };
 
 export const reducer = createReducer(stateCity, (builder) => {
@@ -29,10 +31,13 @@ export const reducer = createReducer(stateCity, (builder) => {
     .addCase(changeCityAction, (state, action) => {
       state.city = action.payload;
     })
-    .addCase(fillPlacesAction, (state, action) => {
+    .addCase(loadPlacesAction, (state, action) => {
       state.places = action.payload;
     })
     .addCase(changeSortingAction, (state, action) => {
       state.sorting = action.payload;
+    })
+    .addCase(requireAuthorizationAction, (state, action) => {
+      state.authorizationStatus = action.payload;
     });
 });
