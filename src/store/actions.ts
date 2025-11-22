@@ -4,7 +4,7 @@ import {City} from '../types/city.ts';
 import {AuthorizationStatus, SortingOption} from '../const.ts';
 
 
-export const changeCityAction = createAction('data/changeCity', (city: City) => ({
+export const changeCityAction = createAction('global/changeCity', (city: City) => ({
   payload: city,
 }));
 export const loadPlacesAction = createAction('data/loadPlaces', (places : Offer[]) => ({
@@ -16,3 +16,4 @@ export const changeSortingAction = createAction('data/changeSorting', (places : 
 export const requireAuthorizationAction = createAction('user/requireAuthorization', (status: AuthorizationStatus) => ({
   payload: status
 }));
+export const setErrorAction = createAction<string | null>('global/setError');

@@ -4,10 +4,14 @@ import App from './components/app/app.tsx';
 import {Offers} from './mocks/offers.ts';
 import {Provider} from 'react-redux';
 import {store} from './store';
+import ErrorMessage from './components/error-message/error-message.tsx';
+import {checkAuthAction} from './store/api-actions';
 
-const Setting = {
+const Settings = {
   Places: Offers,
 } as const;
+
+store.dispatch(checkAuthAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,7 +20,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App offers={Setting.Places}/>
+      <ErrorMessage />
+      <App offers={Settings.Places}/>
     </Provider>
   </React.StrictMode>
 );

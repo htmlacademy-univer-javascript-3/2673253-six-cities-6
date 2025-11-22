@@ -1,6 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {Offers} from '../mocks/offers.ts';
-import {changeCityAction, changeSortingAction, loadPlacesAction, requireAuthorizationAction} from './actions.ts';
+import {
+  changeCityAction,
+  changeSortingAction,
+  loadPlacesAction,
+  requireAuthorizationAction,
+  setErrorAction
+} from './actions.ts';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
 import {AuthorizationStatus, SortingOption} from '../const.ts';
@@ -10,6 +16,7 @@ type stateCityProps = {
   places: Offer[];
   sorting: SortingOption;
   authorizationStatus: AuthorizationStatus;
+  error: string | null;
 }
 
 const stateCity: stateCityProps = {
@@ -23,7 +30,8 @@ const stateCity: stateCityProps = {
   },
   places: Offers.filter((offer: Offer) => offer.city.name === 'Paris'),
   sorting: SortingOption.Popular,
-  authorizationStatus: AuthorizationStatus.Unknown
+  authorizationStatus: AuthorizationStatus.Unknown,
+  error: null,
 };
 
 export const reducer = createReducer(stateCity, (builder) => {
@@ -39,5 +47,8 @@ export const reducer = createReducer(stateCity, (builder) => {
     })
     .addCase(requireAuthorizationAction, (state, action) => {
       state.authorizationStatus = action.payload;
+    })
+    .addCase(setErrorAction, (state, action) => {
+      state.error = action.payload;
     });
 });
