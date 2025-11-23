@@ -12,7 +12,8 @@ import SortingOptions from '../../components/sorting-options/sorting-options.tsx
 function MainScreen(): JSX.Element {
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const currentState = useAppSelector((state) => state);
+  const offers = useAppSelector((state) => state.offers);
+  const city = useAppSelector((state) => state.city);
 
   return (
     <div className="page page--gray page--main">
@@ -25,12 +26,12 @@ function MainScreen(): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{getPlacesLabel(currentState.offers.length)} to stay in {currentState.city.name}</b>
+              <b className="places__found">{getPlacesLabel(offers.length)} to stay in {city.name}</b>
               <SortingOptions />
               <PlaceCardList onListItemHover={setActiveId}/>
             </section>
             <div className="cities__right-section">
-              <Map locations={currentState.offers} activeId={activeId} className="cities"/>
+              <Map locations={offers} activeId={activeId} className="cities"/>
             </div>
           </div>
         </div>
