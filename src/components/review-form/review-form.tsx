@@ -1,11 +1,19 @@
 import React from 'react';
 import {useState} from 'react';
+import {addCommentAction} from '../../store/api-actions.ts';
+import {useAppDispatch} from '../../hooks';
 
-function ReviewForm() : JSX.Element {
+type ReviewFormProps = {
+  offerId: string;
+};
+
+function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
   const [formData, setFormData] = useState({
     rating: 0,
     comment: '',
   });
+
+  const dispatch = useAppDispatch();
 
   const handleRatingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
@@ -21,6 +29,22 @@ function ReviewForm() : JSX.Element {
     }));
   };
 
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    await dispatch(addCommentAction({
+      id: offerId,
+      rating: formData.rating,
+      comment: formData.comment,
+    })).unwrap();
+
+
+    setFormData({
+      rating: 0,
+      comment: '',
+    });
+  };
+
   const isFormValid = formData.rating > 0 && formData.comment.length >= 50;
 
   const starTitles: { [key: number]: string } = {
@@ -32,7 +56,11 @@ function ReviewForm() : JSX.Element {
   };
 
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form" method="post" onSubmit={(e) => {
+      e.preventDefault();
+      void handleSubmit(e);
+    }}
+    >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         {[5, 4, 3, 2, 1].map((star) => (
@@ -69,7 +97,9 @@ function ReviewForm() : JSX.Element {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!isFormValid}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!isFormValid}>
+          Submit
+        </button>
       </div>
     </form>
   );

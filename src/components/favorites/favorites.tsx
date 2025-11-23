@@ -1,11 +1,9 @@
 import CityFavorites from '../city-favorites/city-favorites.tsx';
 import {Offer} from '../../types/offer.ts';
+import {useAppSelector} from '../../hooks';
 
-type favoritesProps = {
-  places: Offer[];
-}
-
-function Favorites({places} : favoritesProps): JSX.Element {
+function Favorites(): JSX.Element {
+  const places = useAppSelector((state) => state.favoriteOffers);
   const placesByCity = places.reduce<Record<string, Offer[]>>((acc, offer) => {
     const city = offer.city.name;
     if (!acc[city]) {

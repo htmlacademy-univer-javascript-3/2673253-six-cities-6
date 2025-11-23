@@ -1,13 +1,9 @@
 import Favorites from '../../components/favorites/favorites.tsx';
-import {Offer} from '../../types/offer.ts';
 import Footer from '../../components/footer/footer.tsx';
 import Header from '../../components/header/header.tsx';
 
-type FavoriteScreenProps = {
-  offers: Offer[];
-};
 
-function FavoritesScreen({offers} : FavoriteScreenProps): JSX.Element {
+function FavoritesScreen(): JSX.Element {
   return (
     <div className="page">
       <Header isMain={false}/>
@@ -16,7 +12,7 @@ function FavoritesScreen({offers} : FavoriteScreenProps): JSX.Element {
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <Favorites places={offers}/>
+            <Favorites/>
           </section>
         </div>
       </main>
