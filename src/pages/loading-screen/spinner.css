@@ -1,0 +1,28 @@
+.loading-page {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  z-index: 9999;
+}
+
+.loading-page__spinner {
+  width: 80px;
+  height: 80px;
+
+  border-radius: 50%;
+  border: 8px solid rgba(68, 129, 195, 0.2);
+  border-top-color: #4481c3;
+
+  animation: loading-page-spin 0.8s linear infinite;
+}
+
+@keyframes loading-page-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

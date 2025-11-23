@@ -21,10 +21,15 @@ export enum SortingOption {
 
 export enum APIRoute {
   Offers = '/offers',
-  Favorites = '/favorites',
+  Favorites = '/favorite',
   Comments = '/comments',
   Login = '/login',
   Logout = '/logout',
+}
+
+export enum FavoriteStatus {
+  In = 1,
+  Out = 0,
 }
 
 export const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';

@@ -7,12 +7,13 @@ import {UserData} from '../types/user-data';
 import {Offer} from '../types/offer.ts';
 import {APIRoute, AppRoute, AuthorizationStatus} from '../const.ts';
 import {
+  loadFavoriteOffersAction,
   loadOffersAction,
   loadOffersNearbyAction,
   redirectToRoute,
   requireAuthorizationAction,
   setCurrentOfferAction,
-  setCurrentReviewsAction,
+  setCurrentReviewsAction, setFavoritesCountAction,
   setOfferDataLoadingStatusAction,
   setOffersDataLoadingStatusAction,
   setOffersNearbyDataLoadingStatusAction,
@@ -22,6 +23,7 @@ import {
 import {OfferWithInfo} from '../types/offer-with-info.ts';
 import {Review} from '../types/review.ts';
 import {ReviewData} from '../types/review-data.ts';
+import {FavoriteData} from '../types/favorite-data.ts';
 
 
 export const fetchOffersAction = createAsyncThunk<void, string, {
@@ -80,6 +82,31 @@ export const fetchReviewsAction = createAsyncThunk<void, string, {
   },
 );
 
+export const fetchFavoritesAction = createAsyncThunk<void, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'user/getFavorites',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api.get<Offer[]>(APIRoute.Favorites);
+    dispatch(loadFavoriteOffersAction(data));
+    dispatch(setFavoritesCountAction(data.length));
+  },
+);
+
+export const changeFavoritesStatusAction = createAsyncThunk<Offer, FavoriteData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'offer/changeFavoritesStatus',
+  async ({offerId, status}, {extra: api}) => {
+    const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offerId}/${status}`);
+    return data;
+  },
+);
+
 export const checkAuthAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
   state: State;
@@ -91,6 +118,7 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
       const {data} = await api.get<UserData>(APIRoute.Login);
       dispatch(requireAuthorizationAction(AuthorizationStatus.Auth));
       dispatch(setUserAction(data));
+      await dispatch(fetchFavoritesAction());
     } catch {
       dispatch(requireAuthorizationAction(AuthorizationStatus.NoAuth));
     }

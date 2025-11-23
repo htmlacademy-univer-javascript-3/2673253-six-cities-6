@@ -16,8 +16,11 @@ export const loadOffersAction = createAction('data/loadOffers', (places : Offer[
 export const loadOffersNearbyAction = createAction('data/loadOffersNearby', (places : Offer[]) => ({
   payload: places
 }));
-export const changeSortingAction = createAction('data/changeSorting', (places : SortingOption) => ({
+export const loadFavoriteOffersAction = createAction('user/loadFavoritesOffers', (places : Offer[]) => ({
   payload: places
+}));
+export const changeSortingAction = createAction('data/changeSorting', (option : SortingOption) => ({
+  payload: option
 }));
 export const requireAuthorizationAction = createAction('user/requireAuthorization', (status: AuthorizationStatus) => ({
   payload: status
@@ -39,6 +42,9 @@ export const redirectToRoute = createAction('global/redirectToRoute', (route: Ap
 }));
 export const setUserAction = createAction('global/setUser', (user: UserData | null) => ({
   payload: user
+}));
+export const setFavoritesCountAction = createAction('user/setFavoritesCount', (count: number | null) => ({
+  payload: count
 }));
 export const setCurrentOfferAction = createAction('global/setCurrentOffer', (offer: OfferWithInfo | null) => ({
   payload: offer
