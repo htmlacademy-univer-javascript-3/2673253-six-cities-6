@@ -17,7 +17,7 @@ import {AuthorizationStatus, SortingOption} from '../const.ts';
 import {UserData} from '../types/user-data.ts';
 import {OfferWithInfo} from '../types/offer-with-info.ts';
 import {Review} from '../types/review.ts';
-import {changeFavoritesStatusAction} from './api-actions.ts';
+import {addCommentAction, changeFavoritesStatusAction} from './api-actions.ts';
 
 type stateCityProps = {
   city: City;
@@ -142,5 +142,9 @@ export const reducer = createReducer(stateCity, (builder) => {
           state.favoriteOffers.splice(favoritesIndex, 1);
         }
       }
+    })
+    .addCase(addCommentAction.fulfilled, (state, action) => {
+      const updated = action.payload;
+      state.currentReviews.push(updated);
     });
 });
