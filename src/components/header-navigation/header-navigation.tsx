@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {logoutAction} from '../../store/api-actions.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
@@ -12,6 +12,7 @@ function HeaderNavigation() : JSX.Element {
 
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
   const hasUser = Boolean(user);
+  const location = useLocation();
 
   return (
     <nav className="header__nav">
@@ -37,7 +38,7 @@ function HeaderNavigation() : JSX.Element {
                 evt.preventDefault();
                 dispatch(logoutAction());
               }}
-              to={AppRoute.Main}
+              to={location.pathname as AppRoute}
             >
               <span className="header__signout">Sign out</span>
             </Link>
@@ -47,6 +48,7 @@ function HeaderNavigation() : JSX.Element {
             <Link
               className="header__nav-link"
               to={AppRoute.Login}
+              state={{ from: location.pathname as AppRoute }}
             >
               <span className="header__login">Login</span>
             </Link>
