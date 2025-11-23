@@ -2,23 +2,35 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   changeCityAction,
   changeSortingAction,
-  loadPlacesAction,
+  loadOffersAction,
+  loadOffersNearbyAction,
   requireAuthorizationAction,
-  setErrorAction, setOffersDataLoadingStatusAction, setUserAction
+  setCurrentOfferAction, setCurrentReviewsAction,
+  setOfferDataLoadingStatusAction,
+  setOffersDataLoadingStatusAction,
+  setOffersNearbyDataLoadingStatusAction, setReviewsDataLoadingStatusAction,
+  setUserAction
 } from './actions.ts';
 import {Offer} from '../types/offer.ts';
 import {City} from '../types/city.ts';
 import {AuthorizationStatus, SortingOption} from '../const.ts';
 import {UserData} from '../types/user-data.ts';
+import {OfferWithInfo} from '../types/offer-with-info.ts';
+import {Review} from '../types/review.ts';
 
 type stateCityProps = {
   city: City;
-  places: Offer[];
+  offers: Offer[];
+  offersNearby: Offer[];
   sorting: SortingOption;
   authorizationStatus: AuthorizationStatus;
   user: UserData | null;
-  error: string | null;
+  currentOffer: OfferWithInfo | null;
+  currentReviews: Review[];
   isOffersDataLoading: boolean;
+  isOffersNearbyDataLoading: boolean;
+  isOfferDataLoading: boolean;
+  isReviewsDataLoading: boolean;
 }
 
 const stateCity: stateCityProps = {
@@ -30,12 +42,17 @@ const stateCity: stateCityProps = {
       zoom: 12
     }
   },
-  places: [],
+  offers: [],
+  offersNearby: [],
   sorting: SortingOption.Popular,
   authorizationStatus: AuthorizationStatus.Unknown,
   user: null,
-  error: null,
-  isOffersDataLoading: false
+  currentOffer: null,
+  currentReviews: [],
+  isOffersDataLoading: false,
+  isOffersNearbyDataLoading: false,
+  isOfferDataLoading: false,
+  isReviewsDataLoading: false,
 };
 
 export const reducer = createReducer(stateCity, (builder) => {
@@ -43,8 +60,11 @@ export const reducer = createReducer(stateCity, (builder) => {
     .addCase(changeCityAction, (state, action) => {
       state.city = action.payload;
     })
-    .addCase(loadPlacesAction, (state, action) => {
-      state.places = action.payload;
+    .addCase(loadOffersAction, (state, action) => {
+      state.offers = action.payload;
+    })
+    .addCase(loadOffersNearbyAction, (state, action) => {
+      state.offersNearby = action.payload;
     })
     .addCase(changeSortingAction, (state, action) => {
       state.sorting = action.payload;
@@ -52,13 +72,25 @@ export const reducer = createReducer(stateCity, (builder) => {
     .addCase(requireAuthorizationAction, (state, action) => {
       state.authorizationStatus = action.payload;
     })
-    .addCase(setErrorAction, (state, action) => {
-      state.error = action.payload;
-    })
     .addCase(setOffersDataLoadingStatusAction, (state, action) => {
       state.isOffersDataLoading = action.payload;
     })
+    .addCase(setOffersNearbyDataLoadingStatusAction, (state, action) => {
+      state.isOffersNearbyDataLoading = action.payload;
+    })
+    .addCase(setOfferDataLoadingStatusAction, (state, action) => {
+      state.isOfferDataLoading = action.payload;
+    })
+    .addCase(setReviewsDataLoadingStatusAction, (state, action) => {
+      state.isReviewsDataLoading = action.payload;
+    })
     .addCase(setUserAction, (state, action) => {
       state.user = action.payload;
+    })
+    .addCase(setCurrentOfferAction, (state, action) => {
+      state.currentOffer = action.payload;
+    })
+    .addCase(setCurrentReviewsAction, (state, action) => {
+      state.currentReviews = action.payload;
     });
 });

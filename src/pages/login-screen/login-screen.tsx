@@ -1,11 +1,13 @@
 import LoginHeader from '../../components/header/login-header.tsx';
 import {FormEvent, useRef} from 'react';
-import {useAppDispatch} from '../../hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {useLocation} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import {Navigate, useLocation} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
 
 function LoginScreen(): JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
@@ -15,6 +17,10 @@ function LoginScreen(): JSX.Element {
   const fromRoute =
     (location.state as { from?: AppRoute })?.from
     ?? AppRoute.Main;
+
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return <Navigate to={fromRoute} replace/>;
+  }
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();

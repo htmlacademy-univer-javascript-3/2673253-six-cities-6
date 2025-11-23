@@ -12,11 +12,8 @@ import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
 import browserHistory from '../../browser-history.ts';
 import HistoryRouter from '../history-router/history-router.tsx';
 
-type AppProps = {
-  offers: Offer[];
-}
 
-function App(props: AppProps): JSX.Element {
+function App(): JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
 
@@ -41,7 +38,7 @@ function App(props: AppProps): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute route={AppRoute.Favorites}>
-              <FavoritesScreen offers={props.offers}/>
+              <FavoritesScreen />
             </PrivateRoute>
           }
         />

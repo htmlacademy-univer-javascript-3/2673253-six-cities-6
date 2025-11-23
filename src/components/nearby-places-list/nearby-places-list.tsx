@@ -1,14 +1,16 @@
 import PlaceCard from '../place-card/place-card.tsx';
 import {useState} from 'react';
-import {Offer} from '../../types/offer.ts';
+import {useAppSelector} from '../../hooks';
 
 type nearbyPlacesListProps = {
-  places: Offer[];
   onListItemHover: (id: string) => void;
 }
 
-function NearbyPlacesList({places, onListItemHover}: nearbyPlacesListProps) {
+function NearbyPlacesList({onListItemHover}: nearbyPlacesListProps) {
   const [, setActiveId] = useState<string | null>(null);
+
+  const places = useAppSelector((state) => state.offersNearby);
+
   const handleMouseEnter = (id: string) => {
     setActiveId(id);
     onListItemHover(id);

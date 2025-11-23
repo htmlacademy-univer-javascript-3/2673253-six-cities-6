@@ -25,12 +25,12 @@ function MainScreen(): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{getPlacesLabel(currentState.places.length)} to stay in {currentState.city.name}</b>
+              <b className="places__found">{getPlacesLabel(currentState.offers.length)} to stay in {currentState.city.name}</b>
               <SortingOptions />
               <PlaceCardList onListItemHover={setActiveId}/>
             </section>
             <div className="cities__right-section">
-              <Map activeId={activeId} className="cities"/>
+              <Map locations={currentState.offers} activeId={activeId} className="cities"/>
             </div>
           </div>
         </div>

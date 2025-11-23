@@ -1,17 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app.tsx';
-import {Offers} from './mocks/offers.ts';
 import {Provider} from 'react-redux';
 import {store} from './store';
-import ErrorMessage from './components/error-message/error-message.tsx';
+import {ToastContainer} from 'react-toastify';
 import {checkAuthAction, fetchOffersAction} from './store/api-actions';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Settings = {
-  Places: Offers,
-} as const;
 
-store.dispatch(fetchOffersAction());
+store.dispatch(fetchOffersAction('Paris'));
 store.dispatch(checkAuthAction());
 
 const root = ReactDOM.createRoot(
@@ -21,8 +18,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ErrorMessage />
-      <App offers={Settings.Places}/>
+      <ToastContainer />
+      <App />
     </Provider>
   </React.StrictMode>
 );

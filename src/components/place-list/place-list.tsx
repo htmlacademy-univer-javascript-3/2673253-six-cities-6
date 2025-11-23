@@ -8,7 +8,7 @@ type placeListProps = {
 
 function PlaceList({onListItemHover}: placeListProps) {
   const currentState = useAppSelector((state) => state);
-  const places = getSortedOffers(currentState.places, currentState.sorting);
+  const places = getSortedOffers(currentState.offers, currentState.sorting);
 
   return (
     <div className="cities__places-list places__list tabs__content">
