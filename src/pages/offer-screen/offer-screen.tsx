@@ -1,90 +1,50 @@
 import ReviewForm from '../../components/review-form/review-form.tsx';
-import {Navigate} from 'react-router-dom';
-import {OfferWithInfo} from '../../types/offer-with-info.ts';
+import {Navigate, useParams} from 'react-router-dom';
 import Header from '../../components/header/header.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
-import {Offers} from '../../mocks/offers.ts';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import NearbyPlacesList from '../../components/nearby-places-list/nearby-places-list.tsx';
+import {fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../../store/api-actions.ts';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import LoadingScreen from '../loading-screen/loading-screen.tsx';
 
 function OfferScreen(): JSX.Element {
-  const offer: OfferWithInfo = {
-    id: '1',
-    title: 'Cozy Apartment in the City Center',
-    type: 'Apartment',
-    price: 100,
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.3676,
-        longitude: 4.9041,
-        zoom: 12,
-      },
-    },
-    location: {
-      latitude: 52.3676,
-      longitude: 4.9041,
-      zoom: 12,
-    },
-    isFavorite: true,
-    isPremium: false,
-    rating: 4.5,
-    description: 'A cozy and modern apartment in the city center.',
-    bedrooms: 2,
-    goods: ['WiFi', 'Air conditioning', 'Parking'],
-    host: {
-      name: 'John Doe',
-      avatarUrl: 'img/avatar-angelina.jpg',
-      isPro: true,
-    },
-    images: ['img/apartment-01.jpg', 'img/apartment-02.jpg', 'img/apartment-03.jpg'],
-    maxAdults: 4,
-  };
-
-  const reviews = [
-    {
-      id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b62a',
-      date: '2019-05-08T14:13:56.569Z',
-      user: {
-        name: 'Oliver Conner',
-        avatarUrl: 'markup/img/avatar-max.jpg',
-        isPro: false
-      },
-      comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
-      rating: 4
-    },
-    {
-      id: 'b67ddfd5-b953-2a50-8c8d-bd083cd6b62a',
-      date: '2025-10-10T14:13:56.569Z',
-      user: {
-        name: 'Egor Spitsyn',
-        avatarUrl: 'markup/img/avatar.svg',
-        isPro: false
-      },
-      comment: 'В Кургане лучше конечно',
-      rating: 2
-    },
-    {
-      id: 'b67241fd5-b953-2a50-8c8d-bd083cd6b62a',
-      date: '2025-10-10T14:13:56.569Z',
-      user: {
-        name: 'Arseny Balin',
-        avatarUrl: 'markup/img/avatar.svg',
-        isPro: false
-      },
-      comment: 'Не Курган, но достойно',
-      rating: 5
-    }
-  ];
-
-  const nearOffers = structuredClone(Offers).slice(0, 3);
-
+  const { id } = useParams<{ id: string }>();
   const [activeId, setActiveId] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchOfferAction(id));
+      dispatch(fetchOffersNearbyAction(id));
+      dispatch(fetchReviewsAction(id));
+    }
+  }, [dispatch, id]);
 
-  if (offer === null) {
-    return <Navigate to="/404" />;
+  const offer = useAppSelector((state) => state.currentOffer);
+  const reviews = useAppSelector((state) => state.currentReviews);
+  const offersNearby = useAppSelector((state) => state.offersNearby);
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+
+  const isOfferDataLoading = useAppSelector((state) => state.isOfferDataLoading);
+  const isOffersNearbyDataLoading = useAppSelector((state) => state.isOffersNearbyDataLoading);
+  const isReviewsDataLoading = useAppSelector((state) => state.isReviewsDataLoading);
+
+  if (!id) {
+    return <Navigate to={AppRoute.NotFound} />;
   }
+
+  if (isOfferDataLoading || isOffersNearbyDataLoading || isReviewsDataLoading || !offer) {
+    return (
+      <LoadingScreen/>
+    );
+  }
+  // } else if (!offer || reviews === null) {
+  //   return <Navigate to={AppRoute.NotFound} />;
+  // }
   return (
     <div className="page">
       <Header isMain={false}/>
@@ -186,16 +146,18 @@ function OfferScreen(): JSX.Element {
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
                 <ReviewsList reviews={reviews}/>
-                <ReviewForm />
+                {isAuth && (
+                  <ReviewForm offerId={id}/>
+                )}
               </section>
             </div>
           </div>
-          <Map activeId={activeId} className="offer"/>
+          <Map locations={offersNearby} activeId={activeId} className="offer"/>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearbyPlacesList places={nearOffers} onListItemHover={setActiveId}/>
+            <NearbyPlacesList onListItemHover={setActiveId}/>
           </section>
         </div>
       </main>
