@@ -144,7 +144,7 @@ export const reducer = createReducer(stateCity, (builder) => {
       }
     })
     .addCase(addCommentAction.fulfilled, (state, action) => {
-      const updated = action.payload;
-      state.currentReviews.push(updated);
+      const updated1 = action.payload;
+      state.currentReviews.push(updated1);
     });
 });
