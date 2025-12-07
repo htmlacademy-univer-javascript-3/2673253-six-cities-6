@@ -1,4 +1,4 @@
-import {AxiosInstance} from 'axios';
+import {AxiosError, AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types/state.ts';
 import {saveToken, dropToken} from '../services/token';
@@ -11,6 +11,7 @@ import {OfferWithInfo} from '../types/offer-with-info.ts';
 import {Review} from '../types/review.ts';
 import {ReviewData} from '../types/review-data.ts';
 import {FavoriteData} from '../types/favorite-data.ts';
+import {StatusCodes} from 'http-status-codes';
 
 
 export const fetchOffersAction = createAsyncThunk<Offer[], string, {
@@ -78,9 +79,17 @@ export const changeFavoritesStatusAction = createAsyncThunk<Offer, FavoriteData,
   extra: AxiosInstance;
 }>(
   'offer/changeFavoritesStatus',
-  async ({offerId, status}, {extra: api}) => {
-    const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offerId}/${status}`);
-    return data;
+  async ({offerId, status}, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.post<Offer>(`${APIRoute.Favorites}/${offerId}/${status}`);
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === StatusCodes.UNAUTHORIZED) {
+        dispatch(redirectToRoute(AppRoute.Login));
+      }
+
+      throw error;
+    }
   },
 );
 
