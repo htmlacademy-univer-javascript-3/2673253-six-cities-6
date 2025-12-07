@@ -4,9 +4,10 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
 import {Navigate, useLocation} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 
 function LoginScreen(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);

@@ -2,11 +2,12 @@ import {Link, useLocation} from 'react-router-dom';
 import {logoutAction} from '../../store/api-actions.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {getAuthorizationStatus, getFavoritesCount, getUser} from '../../store/user-process/selectors.ts';
 
 function HeaderNavigation() : JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
-  const favoritesCount = useAppSelector((state) => state.userFavoritesCount);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const user = useAppSelector(getUser);
+  const favoritesCount = useAppSelector(getFavoritesCount);
 
   const dispatch = useAppDispatch();
 
@@ -25,7 +26,7 @@ function HeaderNavigation() : JSX.Element {
                 {user!.email}
               </span>
               <span className="header__favorite-count">
-                {favoritesCount}
+                {favoritesCount ?? 0}
               </span>
             </Link>
           </li>

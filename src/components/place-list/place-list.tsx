@@ -1,15 +1,13 @@
 import PlaceCard from '../place-card/place-card.tsx';
 import {useAppSelector} from '../../hooks';
-import getSortedOffers from '../../infrastructure/get-sorted-offers.ts';
+import {getSortedOffers} from '../../store/offers-process/selectors.ts';
 
 type placeListProps = {
   onListItemHover: (id: string | null) => void;
 }
 
 function PlaceList({onListItemHover}: placeListProps) {
-  const offers = useAppSelector((state) => state.offers);
-  const sorting = useAppSelector((state) => state.sorting);
-  const places = getSortedOffers(offers, sorting);
+  const places = useAppSelector(getSortedOffers);
 
   return (
     <div className="cities__places-list places__list tabs__content">
@@ -23,8 +21,7 @@ function PlaceList({onListItemHover}: placeListProps) {
           price={place.price}
           title={place.title}
           type={place.type}
-          onMouseEnter={() => onListItemHover(place.id)}
-          onMouseLeave={() => onListItemHover(null)}
+          onHover={onListItemHover}
           className={'cities'}
         />
       ))}

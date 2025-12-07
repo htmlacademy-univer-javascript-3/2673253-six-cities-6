@@ -9,6 +9,15 @@ import {fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
+import {
+  getCurrentOffer,
+  getCurrentReviews,
+  getIsOfferDataLoading,
+  getIsOffersNearbyDataLoading,
+  getIsReviewsDataLoading,
+  getOffersNearby
+} from '../../store/offers-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -22,29 +31,36 @@ function OfferScreen(): JSX.Element {
     }
   }, [dispatch, id]);
 
-  const offer = useAppSelector((state) => state.currentOffer);
-  const reviews = useAppSelector((state) => state.currentReviews);
-  const offersNearby = useAppSelector((state) => state.offersNearby);
+  const offer = useAppSelector(getCurrentOffer);
+  const reviews = useAppSelector(getCurrentReviews);
+  const offersNearby = useAppSelector(getOffersNearby);
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
-  const isOfferDataLoading = useAppSelector((state) => state.isOfferDataLoading);
-  const isOffersNearbyDataLoading = useAppSelector((state) => state.isOffersNearbyDataLoading);
-  const isReviewsDataLoading = useAppSelector((state) => state.isReviewsDataLoading);
+  const isOfferDataLoading = useAppSelector(getIsOfferDataLoading);
+  const isOffersNearbyDataLoading = useAppSelector(getIsOffersNearbyDataLoading);
+  const isReviewsDataLoading = useAppSelector(getIsReviewsDataLoading);
 
   if (!id) {
     return <Navigate to={AppRoute.NotFound} />;
   }
 
-  if (isOfferDataLoading || isOffersNearbyDataLoading || isReviewsDataLoading || !offer) {
+  if (isOfferDataLoading) {
     return (
       <LoadingScreen/>
     );
   }
-  // } else if (!offer || reviews === null) {
-  //   return <Navigate to={AppRoute.NotFound} />;
-  // }
+
+  if (!offer) {
+    return <Navigate to={AppRoute.NotFound} />;
+  }
+
+  if (isOffersNearbyDataLoading || isReviewsDataLoading) {
+    return (
+      <LoadingScreen/>
+    );
+  }
   return (
     <div className="page">
       <Header isMain={false}/>

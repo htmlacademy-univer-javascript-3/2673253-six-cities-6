@@ -1,29 +1,30 @@
+import {memo, useCallback, useMemo} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {changeCityAction, changeSortingAction} from '../../store/actions.ts';
+import {changeCity, changeSorting} from '../../store/settings-process/settings-process';
 import {City} from '../../types/city.ts';
 import {SortingOption} from '../../const.ts';
 import {fetchOffersAction} from '../../store/api-actions.ts';
+import {getCurrentCity} from '../../store/settings-process/selectors.ts';
 
 type CityListProps = {
   cities: City[];
 }
 
-function CityList({cities}: CityListProps) {
-  const citiesNames = cities.map((city) => city.name);
-  const currentCity = useAppSelector((state) => state.city);
+function CityListComponent({cities}: CityListProps) {
+  const citiesNames = useMemo(() => cities.map((city) => city.name), [cities]);
+  const currentCity = useAppSelector(getCurrentCity);
 
-  const cityMap = Object.fromEntries(
+  const cityMap = useMemo(() => Object.fromEntries(
     cities.map((city) => [city.name, city])
-  );
+  ), [cities]);
 
   const dispatch = useAppDispatch();
 
-  const cityClickHandle = (cityName: City['name']) => {
-    dispatch(changeCityAction(cityMap[cityName]));
+  const cityClickHandle = useCallback((cityName: City['name']) => {
+    dispatch(changeCity(cityMap[cityName]));
     dispatch(fetchOffersAction(cityName));
-    dispatch(changeSortingAction(SortingOption.Popular));
-  };
-
+    dispatch(changeSorting(SortingOption.Popular));
+  }, [dispatch, cityMap]);
 
   return (
     <div className="tabs">
@@ -44,6 +45,6 @@ function CityList({cities}: CityListProps) {
   );
 }
 
+const CityList = memo(CityListComponent);
 
 export default CityList;
-

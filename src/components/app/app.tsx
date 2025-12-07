@@ -10,11 +10,13 @@ import {useAppSelector} from '../../hooks';
 import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
 import browserHistory from '../../browser-history.ts';
 import HistoryRouter from '../history-router/history-router.tsx';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getIsOffersDataLoading} from '../../store/offers-process/selectors.ts';
 
 
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isOffersDataLoading = useAppSelector(getIsOffersDataLoading);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoading) {
     return (

@@ -1,28 +1,15 @@
 import PlaceCard from '../place-card/place-card.tsx';
-import {useState} from 'react';
 import {useAppSelector} from '../../hooks';
+import {getOffersNearby} from '../../store/offers-process/selectors.ts';
 
-type nearbyPlacesListProps = {
-  onListItemHover: (id: string) => void;
+type NearbyPlacesListProps = {
+  onListItemHover: (id: string | null) => void;
 }
 
-function NearbyPlacesList({onListItemHover}: nearbyPlacesListProps) {
-  const [, setActiveId] = useState<string | null>(null);
-
-  const places = useAppSelector((state) => state.offersNearby);
-
-  const handleMouseEnter = (id: string) => {
-    setActiveId(id);
-    onListItemHover(id);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveId(null);
-    onListItemHover('');
-  };
+function NearbyPlacesList({onListItemHover}: NearbyPlacesListProps) {
+  const places = useAppSelector(getOffersNearby);
 
   return (
-
     <div className="near-places__list places__list">
       {places.map((place) => (
         <PlaceCard
@@ -34,8 +21,7 @@ function NearbyPlacesList({onListItemHover}: nearbyPlacesListProps) {
           price={place.price}
           title={place.title}
           type={place.type}
-          onMouseEnter={() => handleMouseEnter(place.id)}
-          onMouseLeave={handleMouseLeave}
+          onHover={onListItemHover}
           className={'near-places'}
         />
       ))}

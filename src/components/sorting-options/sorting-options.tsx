@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { SortingOption } from '../../const';
-import { changeSortingAction } from '../../store/actions';
+import {useCallback, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {SortingOption} from '../../const';
+import {changeSorting} from '../../store/settings-process/settings-process';
+import {getSorting} from '../../store/settings-process/selectors.ts';
 
 function SortingOptions() {
-  const currentOption = useAppSelector((state) => state.sorting);
+  const currentOption = useAppSelector(getSorting);
   const options = Object.values(SortingOption);
 
   const dispatch = useAppDispatch();
 
   const [isOpened, setIsOpened] = useState(false);
 
-  const toggleOpen = () => {
+  const toggleOpen = useCallback(() => {
     setIsOpened((prev) => !prev);
-  };
+  }, []);
 
-  const handleSelect = (option: SortingOption) => {
-    dispatch(changeSortingAction(option));
-    setIsOpened(false); // закрываем
-  };
+  const handleSelect = useCallback((option: SortingOption) => {
+    dispatch(changeSorting(option));
+    setIsOpened(false);
+  }, [dispatch]);
 
   return (
     <form className="places__sorting" action="#" method="get">
