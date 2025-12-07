@@ -1,10 +1,11 @@
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {useEffect, useRef} from 'react';
+import {useEffect, useMemo, useRef} from 'react';
 import useMap from '../../hooks/use-map.ts';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../const.ts';
 import {useAppSelector} from '../../hooks';
 import {Offer} from '../../types/offer.ts';
+import {getCurrentCity} from '../../store/settings-process/selectors.ts';
 
 
 type mapProps = {
@@ -16,20 +17,20 @@ type mapProps = {
 function Map({locations, activeId, className}: mapProps): JSX.Element {
   const mapRef = useRef(null);
   const markersLayerRef = useRef<leaflet.LayerGroup | null>(null);
-  const currentCity = useAppSelector((state) => state.city);
+  const currentCity = useAppSelector(getCurrentCity);
   const map = useMap(mapRef, currentCity.location);
 
-  const defaultCustomIcon = leaflet.icon({
+  const defaultCustomIcon = useMemo(() => leaflet.icon({
     iconUrl: URL_MARKER_DEFAULT,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-  });
+  }), []);
 
-  const currentCustomIcon = leaflet.icon({
+  const currentCustomIcon = useMemo(() => leaflet.icon({
     iconUrl: URL_MARKER_CURRENT,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
-  });
+  }), []);
 
   useEffect(() => {
     if (map) {

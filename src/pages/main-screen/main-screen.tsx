@@ -7,13 +7,15 @@ import Cities from '../../mocks/cities.ts';
 import {useAppSelector} from '../../hooks';
 import getPlacesLabel from '../../infrastructure/get-places-label.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
+import {getOffersByCity} from '../../store/offers-process/selectors.ts';
+import {getCurrentCity} from '../../store/settings-process/selectors.ts';
 
 
 function MainScreen(): JSX.Element {
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  const offers = useAppSelector((state) => state.offers);
-  const city = useAppSelector((state) => state.city);
+  const offers = useAppSelector(getOffersByCity);
+  const city = useAppSelector(getCurrentCity);
 
   return (
     <div className="page page--gray page--main">

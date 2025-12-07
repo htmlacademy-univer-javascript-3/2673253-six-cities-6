@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {memo, useCallback} from 'react';
 import {useAppDispatch} from '../../hooks';
 import {changeFavoritesStatusAction} from '../../store/api-actions.ts';
 
@@ -12,27 +13,27 @@ type FavoritesPlaceCardProps = {
   type: string;
 }
 
-function FavoritesPlaceCard(props : FavoritesPlaceCardProps): JSX.Element {
+function FavoritesPlaceCardComponent({id, title, previewImage, isPremium, isFavorite, price, type}: FavoritesPlaceCardProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleBookmarkClick = () => {
-    const newStatus = props.isFavorite ? 0 : 1;
+  const handleBookmarkClick = useCallback(() => {
+    const newStatus = isFavorite ? 0 : 1;
 
     dispatch(changeFavoritesStatusAction({
-      offerId: props.id,
+      offerId: id,
       status: newStatus,
     }));
-  };
+  }, [dispatch, id, isFavorite]);
 
   return (
     <article className='favorites__card place-card'>
-      {props.isPremium &&
+      {isPremium &&
         <div className="place-card__mark">
           <span>Premium</span>
         </div>}
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <Link to={`/offer/${props.id}`}>
-          <img className="place-card__image" src={props.previewImage} width="260" height="200"
+        <Link to={`/offer/${id}`}>
+          <img className="place-card__image" src={previewImage} width="260" height="200"
             alt="Place image"
           />
         </Link>
@@ -40,13 +41,13 @@ function FavoritesPlaceCard(props : FavoritesPlaceCardProps): JSX.Element {
       <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{props.price}</b>
+            <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button className={`
               place-card__bookmark-button
               button
-              ${props.isFavorite ? 'place-card__bookmark-button--active' : ''}
+              ${isFavorite ? 'place-card__bookmark-button--active' : ''}
             `}
           type="button"
           onClick={handleBookmarkClick}
@@ -64,12 +65,14 @@ function FavoritesPlaceCard(props : FavoritesPlaceCardProps): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{props.title}</a>
+          <a href="#">{title}</a>
         </h2>
-        <p className="place-card__type">{props.type}</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );
 }
+
+const FavoritesPlaceCard = memo(FavoritesPlaceCardComponent);
 
 export default FavoritesPlaceCard;
