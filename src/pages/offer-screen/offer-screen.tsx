@@ -3,10 +3,10 @@ import {Navigate, useParams} from 'react-router-dom';
 import Header from '../../components/header/header.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import NearbyPlacesList from '../../components/nearby-places-list/nearby-places-list.tsx';
-import {fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../../store/api-actions.ts';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {changeFavoritesStatusAction, fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../../store/api-actions.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
 import {
@@ -18,6 +18,7 @@ import {
   getOffersNearby
 } from '../../store/offers-process/selectors.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {redirectToRoute} from '../../store/actions.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -41,6 +42,24 @@ function OfferScreen(): JSX.Element {
   const isOfferDataLoading = useAppSelector(getIsOfferDataLoading);
   const isOffersNearbyDataLoading = useAppSelector(getIsOffersNearbyDataLoading);
   const isReviewsDataLoading = useAppSelector(getIsReviewsDataLoading);
+
+  const handleBookmarkClick = useCallback(() => {
+    if (!offer) {
+      return;
+    }
+
+    if (!isAuth) {
+      dispatch(redirectToRoute(AppRoute.Login));
+      return;
+    }
+
+    const newStatus = offer.isFavorite ? FavoriteStatus.Out : FavoriteStatus.In;
+
+    dispatch(changeFavoritesStatusAction({
+      offerId: offer.id,
+      status: newStatus,
+    }));
+  }, [dispatch, isAuth, offer]);
 
   if (!id) {
     return <Navigate to={AppRoute.NotFound} />;
@@ -91,11 +110,19 @@ function OfferScreen(): JSX.Element {
                 <h1 className="offer__name">
                   {offer.title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button
+                  className={`
+                    offer__bookmark-button
+                    button
+                    ${offer.isFavorite ? 'offer__bookmark-button--active' : ''}
+                  `}
+                  type="button"
+                  onClick={handleBookmarkClick}
+                >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
-                  <span className="visually-hidden">To bookmarks</span>
+                  <span className="visually-hidden">{offer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
                 </button>
               </div>
               <div className="offer__rating rating">

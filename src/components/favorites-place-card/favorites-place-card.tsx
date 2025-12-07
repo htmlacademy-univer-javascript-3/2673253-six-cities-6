@@ -1,7 +1,10 @@
 import {Link} from 'react-router-dom';
 import {memo, useCallback} from 'react';
-import {useAppDispatch} from '../../hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {changeFavoritesStatusAction} from '../../store/api-actions.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
+import {redirectToRoute} from '../../store/actions.ts';
 
 type FavoritesPlaceCardProps = {
   id: string;
@@ -15,15 +18,22 @@ type FavoritesPlaceCardProps = {
 
 function FavoritesPlaceCardComponent({id, title, previewImage, isPremium, isFavorite, price, type}: FavoritesPlaceCardProps): JSX.Element {
   const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   const handleBookmarkClick = useCallback(() => {
-    const newStatus = isFavorite ? 0 : 1;
+    if (!isAuth) {
+      dispatch(redirectToRoute(AppRoute.Login));
+      return;
+    }
+
+    const newStatus = isFavorite ? FavoriteStatus.Out : FavoriteStatus.In;
 
     dispatch(changeFavoritesStatusAction({
       offerId: id,
       status: newStatus,
     }));
-  }, [dispatch, id, isFavorite]);
+  }, [dispatch, id, isFavorite, isAuth]);
 
   return (
     <article className='favorites__card place-card'>
