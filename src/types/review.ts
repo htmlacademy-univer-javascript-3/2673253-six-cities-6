@@ -1,9 +1,9 @@
-import {reviewUser} from './reviewUser.ts';
+import {ReviewUser} from './review-user.ts';
 
 export type Review = {
   id: string;
   date: string;
-  user: reviewUser;
+  user: ReviewUser;
   comment: string;
   rating: number;
-}
+};
