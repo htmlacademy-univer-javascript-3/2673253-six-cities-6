@@ -12,7 +12,7 @@ function SortingOptions() {
 
   const [isOpened, setIsOpened] = useState(false);
 
-  const toggleOpen = useCallback(() => {
+  const handleToggleOpen = useCallback(() => {
     setIsOpened((prev) => !prev);
   }, []);
 
@@ -28,7 +28,7 @@ function SortingOptions() {
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={toggleOpen}
+        onClick={handleToggleOpen}
       >
         {currentOption}
         <svg className="places__sorting-arrow" width="7" height="4">
