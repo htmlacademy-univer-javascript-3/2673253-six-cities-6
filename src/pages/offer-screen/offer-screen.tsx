@@ -19,6 +19,7 @@ import {
 } from '../../store/offers-process/selectors.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {redirectToRoute} from '../../store/actions.ts';
+import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -127,7 +128,7 @@ function OfferScreen(): JSX.Element {
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${offer.rating * 100 / 5}%`}}></span>
+                  <span style={{width: getRatingWidth(offer.rating)}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{offer.rating}</span>

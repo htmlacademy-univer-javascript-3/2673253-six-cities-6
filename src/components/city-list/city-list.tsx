@@ -2,9 +2,8 @@ import {memo, useCallback, useMemo} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {changeCity, changeSorting} from '../../store/settings-process/settings-process';
 import {City} from '../../types/city.ts';
-import {SortingOption} from '../../const.ts';
-import {fetchOffersAction} from '../../store/api-actions.ts';
 import {getCurrentCity} from '../../store/settings-process/selectors.ts';
+import {DEFAULT_SORTING} from '../../const.ts';
 
 type CityListProps = {
   cities: City[];
@@ -20,11 +19,14 @@ function CityListComponent({cities}: CityListProps) {
 
   const dispatch = useAppDispatch();
 
-  const cityClickHandle = useCallback((cityName: City['name']) => {
+  const handleCityClick = useCallback((cityName: City['name']) => {
+    if (currentCity.name === cityName) {
+      return;
+    }
+
     dispatch(changeCity(cityMap[cityName]));
-    dispatch(fetchOffersAction(cityName));
-    dispatch(changeSorting(SortingOption.Popular));
-  }, [dispatch, cityMap]);
+    dispatch(changeSorting(DEFAULT_SORTING));
+  }, [dispatch, cityMap, currentCity.name]);
 
   return (
     <div className="tabs">
@@ -33,7 +35,7 @@ function CityListComponent({cities}: CityListProps) {
           {citiesNames.map((name) => (
             <li key={name} className="locations__item">
               <a className={`locations__item-link tabs__item ${currentCity.name === name ? 'tabs__item--active' : ''}`}
-                onClick={() => cityClickHandle(name)}
+                onClick={() => handleCityClick(name)}
               >
                 <span>{name}</span>
               </a>
