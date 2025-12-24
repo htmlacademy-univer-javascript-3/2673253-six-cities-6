@@ -14,15 +14,15 @@ import {FavoriteData} from '../types/favorite-data.ts';
 import {StatusCodes} from 'http-status-codes';
 
 
-export const fetchOffersAction = createAsyncThunk<Offer[], string, {
+export const fetchOffersAction = createAsyncThunk<Offer[], void, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'data/fetchOffers',
-  async (cityName, {extra: api}) => {
+  async (_arg, {extra: api}) => {
     const {data} = await api.get<Offer[]>(APIRoute.Offers);
-    return data.filter((offer) => offer.city.name === cityName);
+    return data;
   },
 );
 
@@ -61,7 +61,7 @@ export const fetchReviewsAction = createAsyncThunk<Review[], string, {
   },
 );
 
-export const fetchFavoritesAction = createAsyncThunk<Offer[], undefined, {
+export const fetchFavoritesAction = createAsyncThunk<Offer[], void, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -93,7 +93,7 @@ export const changeFavoritesStatusAction = createAsyncThunk<Offer, FavoriteData,
   },
 );
 
-export const checkAuthAction = createAsyncThunk<UserData, undefined, {
+export const checkAuthAction = createAsyncThunk<UserData, void, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -121,7 +121,7 @@ export const loginAction = createAsyncThunk<UserData, AuthData, {
   },
 );
 
-export const logoutAction = createAsyncThunk<void, undefined, {
+export const logoutAction = createAsyncThunk<void, void, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;

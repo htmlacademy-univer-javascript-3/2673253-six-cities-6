@@ -13,14 +13,8 @@ function PlaceList({onListItemHover}: placeListProps) {
     <div className="cities__places-list places__list tabs__content">
       {places.map((place) => (
         <PlaceCard
-          id={place.id}
+          offer={place}
           key={place.id}
-          previewImage={place.previewImage}
-          isPremium={place.isPremium}
-          isFavorite={place.isFavorite}
-          price={place.price}
-          title={place.title}
-          type={place.type}
           onHover={onListItemHover}
           className={'cities'}
         />

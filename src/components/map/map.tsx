@@ -2,7 +2,7 @@ import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {useEffect, useMemo, useRef} from 'react';
 import useMap from '../../hooks/use-map.ts';
-import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../const.ts';
+import {MAP_ICON_ANCHOR, MAP_ICON_SIZE, URL_MARKER_CURRENT, URL_MARKER_DEFAULT} from '../../const.ts';
 import {useAppSelector} from '../../hooks';
 import {Offer} from '../../types/offer.ts';
 import {getCurrentCity} from '../../store/settings-process/selectors.ts';
@@ -22,14 +22,14 @@ function Map({locations, activeId, className}: mapProps): JSX.Element {
 
   const defaultCustomIcon = useMemo(() => leaflet.icon({
     iconUrl: URL_MARKER_DEFAULT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: MAP_ICON_SIZE,
+    iconAnchor: MAP_ICON_ANCHOR,
   }), []);
 
   const currentCustomIcon = useMemo(() => leaflet.icon({
     iconUrl: URL_MARKER_CURRENT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: MAP_ICON_SIZE,
+    iconAnchor: MAP_ICON_ANCHOR,
   }), []);
 
   useEffect(() => {

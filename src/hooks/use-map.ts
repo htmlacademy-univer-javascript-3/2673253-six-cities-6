@@ -1,6 +1,7 @@
 import leaflet from 'leaflet';
 import {RefObject, useEffect, useRef, useState} from 'react';
 import {Location} from '../types/location.ts';
+import {MAP_TILE_LAYER_ATTRIBUTION, MAP_TILE_LAYER_URL} from '../const.ts';
 
 function useMap(mapRef: RefObject<HTMLDivElement>, city: Location) {
   const [map, setMap] = useState<leaflet.Map | null>(null);
@@ -18,9 +19,9 @@ function useMap(mapRef: RefObject<HTMLDivElement>, city: Location) {
 
       leaflet
         .tileLayer(
-          'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+          MAP_TILE_LAYER_URL,
           {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: MAP_TILE_LAYER_ATTRIBUTION,
           },
         )
         .addTo(instance);

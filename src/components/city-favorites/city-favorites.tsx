@@ -1,5 +1,7 @@
 import {Offer} from '../../types/offer.ts';
-import FavoritesPlaceCard from '../favorites-place-card/favorites-place-card.tsx';
+import PlaceCard from '../place-card/place-card.tsx';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
 
 type cityFavoritesProps = {
   city: string;
@@ -10,22 +12,18 @@ function CityFavorites({city, places}: cityFavoritesProps): JSX.Element {
     <li className="favorites__locations-items">
       <div className="favorites__locations locations locations--current">
         <div className="locations__item">
-          <a className="locations__item-link" href="#">
+          <Link className="locations__item-link" to={AppRoute.Main}>
             <span>{city}</span>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="favorites__places">
         {places.map((place) => (
-          <FavoritesPlaceCard
-            id={place.id}
+          <PlaceCard
             key={place.id}
-            previewImage={place.previewImage}
-            isPremium={place.isPremium}
-            isFavorite={place.isFavorite}
-            price={place.price}
-            title={place.title}
-            type={place.type}
+            offer={place}
+            className="favorites"
+            infoWrapperClassName="favorites__card-info"
           />
         ))}
       </div>
