@@ -5,7 +5,7 @@ import {changeFavoritesStatusAction} from '../../store/api-actions.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
 import {redirectToRoute} from '../../store/actions.ts';
-import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
+import {getRatingWidth} from '../../utils/get-rating-width.ts';
 import {Offer} from '../../types/offer.ts';
 
 type PlaceCardProps = {

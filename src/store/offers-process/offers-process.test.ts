@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import {changeFavoritesStatusAction, fetchFavoritesAction, fetchOfferAction, fetchOffersAction, fetchOffersNearbyAction, fetchReviewsAction} from '../api-actions.ts';
 import {offersProcess} from './offers-process.ts';
-import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview} from '../../test-helpers/mock-data.ts';
-import {makeFakeOffersProcessState} from '../../test-helpers/mock-state.ts';
+import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview} from '../../mocks/mock-data.ts';
+import {makeFakeOffersProcessState} from '../../mocks/mock-state.ts';
 
 describe('offersProcess reducer', () => {
   const initialState = makeFakeOffersProcessState();

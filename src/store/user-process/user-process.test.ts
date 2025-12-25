@@ -1,5 +1,5 @@
 import {AuthorizationStatus} from '../../const.ts';
-import {makeFakeUserData, makeFakeOffer} from '../../test-helpers/mock-data.ts';
+import {makeFakeUserData, makeFakeOffer} from '../../mocks/mock-data.ts';
 import {
   changeFavoritesStatusAction,
   checkAuthAction,
@@ -8,7 +8,7 @@ import {
   logoutAction
 } from '../api-actions.ts';
 import {userProcess} from './user-process.ts';
-import {makeFakeUserProcessState} from '../../test-helpers/mock-state.ts';
+import {makeFakeUserProcessState} from '../../mocks/mock-state.ts';
 
 describe('userProcess reducer', () => {
   const initialState = makeFakeUserProcessState();

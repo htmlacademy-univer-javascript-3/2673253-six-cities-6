@@ -1,7 +1,7 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {State} from '../../types/state.ts';
 import {NameSpace} from '../../const.ts';
-import sortOffers from '../../infrastructure/get-sorted-offers.ts';
+import sortOffers from '../../utils/get-sorted-offers.ts';
 import {getCurrentCity, getSorting} from '../settings-process/selectors.ts';
 import {Offer} from '../../types/offer.ts';
 

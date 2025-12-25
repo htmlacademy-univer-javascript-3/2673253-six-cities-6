@@ -19,7 +19,7 @@ import {
 } from '../../store/offers-process/selectors.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {redirectToRoute} from '../../store/actions.ts';
-import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
+import {getRatingWidth} from '../../utils/get-rating-width.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
