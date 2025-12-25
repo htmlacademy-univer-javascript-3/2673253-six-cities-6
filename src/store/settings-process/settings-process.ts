@@ -1,5 +1,5 @@
 import {createSlice, createAction} from '@reduxjs/toolkit';
-import {NameSpace, SortingOption} from '../../const.ts';
+import {DEFAULT_CITY, DEFAULT_SORTING, NameSpace, SortingOption} from '../../const.ts';
 import {SettingsProcess} from '../../types/state.ts';
 import {City} from '../../types/city.ts';
 
@@ -7,15 +7,8 @@ export const changeCity = createAction<City>('settings/changeCity');
 export const changeSorting = createAction<SortingOption>('settings/changeSorting');
 
 const initialState: SettingsProcess = {
-  city: {
-    name: 'Paris',
-    location: {
-      latitude: 48.864716,
-      longitude: 2.349014,
-      zoom: 12,
-    },
-  },
-  sorting: SortingOption.Popular,
+  city: DEFAULT_CITY,
+  sorting: DEFAULT_SORTING,
 };
 
 export const settingsProcess = createSlice({

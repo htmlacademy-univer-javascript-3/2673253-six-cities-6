@@ -1,4 +1,5 @@
 import {Review} from '../../types/review.ts';
+import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
 
 type reviewItemProps = {
   review: Review;
@@ -21,7 +22,7 @@ function ReviewItem({review} : reviewItemProps): JSX.Element {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{width: `${review.rating * 20}%`}}></span>
+            <span style={{width: getRatingWidth(review.rating)}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

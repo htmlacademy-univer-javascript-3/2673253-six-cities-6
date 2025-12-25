@@ -1,5 +1,5 @@
-export type reviewUser = {
+export type ReviewUser = {
   name: string;
   avatarUrl: string;
   isPro: boolean;
-}
+};

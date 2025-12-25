@@ -1,10 +1,12 @@
 import LoginHeader from '../../components/header/login-header.tsx';
-import {FormEvent, useRef} from 'react';
+import {FormEvent, useMemo, useRef} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {Navigate, useLocation} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {Link, Navigate, useLocation} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus, DEFAULT_SORTING} from '../../const.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import Cities from '../../mocks/cities.ts';
+import {changeCity, changeSorting} from '../../store/settings-process/settings-process.ts';
 
 function LoginScreen(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -14,6 +16,7 @@ function LoginScreen(): JSX.Element {
 
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const randomCity = useMemo(() => Cities[Math.floor(Math.random() * Cities.length)], []);
 
   const fromRoute =
     (location.state as { from?: AppRoute })?.from
@@ -33,6 +36,11 @@ function LoginScreen(): JSX.Element {
         redirectTo: fromRoute,
       }));
     }
+  };
+
+  const handleCityClick = () => {
+    dispatch(changeCity(randomCity));
+    dispatch(changeSorting(DEFAULT_SORTING));
   };
 
   return (
@@ -73,9 +81,9 @@ function LoginScreen(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
-              </a>
+              <Link className="locations__item-link" to={AppRoute.Main} onClick={handleCityClick}>
+                <span>{randomCity.name}</span>
+              </Link>
             </div>
           </section>
         </div>

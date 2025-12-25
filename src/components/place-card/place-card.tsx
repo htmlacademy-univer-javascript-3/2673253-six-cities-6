@@ -5,20 +5,18 @@ import {changeFavoritesStatusAction} from '../../store/api-actions.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
 import {redirectToRoute} from '../../store/actions.ts';
+import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
+import {Offer} from '../../types/offer.ts';
 
 type PlaceCardProps = {
-  id: string;
-  title: string;
-  previewImage: string;
-  isPremium: boolean;
-  isFavorite: boolean;
+  offer: Offer;
   onHover?: (id: string | null) => void;
-  price: number;
-  type: string;
   className: string;
-}
+  infoWrapperClassName?: string;
+};
 
-function PlaceCardComponent({id, title, previewImage, isPremium, isFavorite, onHover, price, type, className}: PlaceCardProps): JSX.Element {
+function PlaceCardComponent({offer, onHover, className, infoWrapperClassName}: PlaceCardProps): JSX.Element {
+  const {id, title, previewImage, isPremium, isFavorite, rating, price, type} = offer;
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
@@ -61,7 +59,7 @@ function PlaceCardComponent({id, title, previewImage, isPremium, isFavorite, onH
           />
         </Link>
       </div>
-      <div className="place-card__info">
+      <div className={`${infoWrapperClassName ? `${infoWrapperClassName} ` : ''}place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
@@ -83,12 +81,12 @@ function PlaceCardComponent({id, title, previewImage, isPremium, isFavorite, onH
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: '80%'}}></span>
+            <span style={{width: getRatingWidth(rating)}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          {title}
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

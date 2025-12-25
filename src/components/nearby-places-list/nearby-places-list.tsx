@@ -13,14 +13,8 @@ function NearbyPlacesList({onListItemHover}: NearbyPlacesListProps) {
     <div className="near-places__list places__list">
       {places.map((place) => (
         <PlaceCard
-          id={place.id}
+          offer={place}
           key={place.id}
-          previewImage={place.previewImage}
-          isPremium={place.isPremium}
-          isFavorite={place.isFavorite}
-          price={place.price}
-          title={place.title}
-          type={place.type}
           onHover={onListItemHover}
           className={'near-places'}
         />

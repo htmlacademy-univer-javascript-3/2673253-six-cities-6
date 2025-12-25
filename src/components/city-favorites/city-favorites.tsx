@@ -1,31 +1,44 @@
+import {Link} from 'react-router-dom';
+import {AppRoute, DEFAULT_SORTING} from '../../const.ts';
+import {useAppDispatch} from '../../hooks';
+import {changeCity, changeSorting} from '../../store/settings-process/settings-process';
+import Cities from '../../mocks/cities.ts';
 import {Offer} from '../../types/offer.ts';
-import FavoritesPlaceCard from '../favorites-place-card/favorites-place-card.tsx';
+import PlaceCard from '../place-card/place-card.tsx';
 
 type cityFavoritesProps = {
   city: string;
   places: Offer[];
 }
 function CityFavorites({city, places}: cityFavoritesProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const handleCityClick = () => {
+    const cityData = Cities.find(({name}) => name === city);
+    if (!cityData) {
+      return;
+    }
+
+    dispatch(changeCity(cityData));
+    dispatch(changeSorting(DEFAULT_SORTING));
+  };
+
   return (
     <li className="favorites__locations-items">
       <div className="favorites__locations locations locations--current">
         <div className="locations__item">
-          <a className="locations__item-link" href="#">
+          <Link className="locations__item-link" to={AppRoute.Main} onClick={handleCityClick}>
             <span>{city}</span>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="favorites__places">
         {places.map((place) => (
-          <FavoritesPlaceCard
-            id={place.id}
+          <PlaceCard
             key={place.id}
-            previewImage={place.previewImage}
-            isPremium={place.isPremium}
-            isFavorite={place.isFavorite}
-            price={place.price}
-            title={place.title}
-            type={place.type}
+            offer={place}
+            className="favorites"
+            infoWrapperClassName="favorites__card-info"
           />
         ))}
       </div>

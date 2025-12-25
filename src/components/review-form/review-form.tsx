@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import {addCommentAction} from '../../store/api-actions.ts';
 import {useAppDispatch} from '../../hooks';
+import {MAX_REVIEW_LENGTH, MIN_REVIEW_LENGTH, RATING_STARS, RATING_TITLES} from '../../const.ts';
 
 type ReviewFormProps = {
   offerId: string;
@@ -45,25 +46,13 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
     });
   };
 
-  const isFormValid = formData.rating > 0 && formData.comment.length >= 50;
-
-  const starTitles: { [key: number]: string } = {
-    5: 'perfect',
-    4: 'good',
-    3: 'not bad',
-    2: 'badly',
-    1: 'terribly',
-  };
+  const isFormValid = formData.rating > 0 && formData.comment.length >= MIN_REVIEW_LENGTH && formData.comment.length <= MAX_REVIEW_LENGTH;
 
   return (
-    <form className="reviews__form form" method="post" onSubmit={(e) => {
-      e.preventDefault();
-      void handleSubmit(e);
-    }}
-    >
+    <form className="reviews__form form" method="post" onSubmit={(event) => void handleSubmit(event)}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        {[5, 4, 3, 2, 1].map((star) => (
+        {RATING_STARS.map((star) => (
           <React.Fragment key={star}>
             <input
               className="form__rating-input visually-hidden"
@@ -77,7 +66,7 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
             <label
               htmlFor={`${star}-stars`}
               className="reviews__rating-label form__rating-label"
-              title={starTitles[star]}
+              title={RATING_TITLES[star]}
             >
               <svg className="form__star-image" width="37" height="33">
                 <use xlinkHref="#icon-star"></use>
@@ -90,12 +79,14 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formData.comment}
         onChange={handleCommentChange}
+        maxLength={MAX_REVIEW_LENGTH}
+        minLength={MIN_REVIEW_LENGTH}
       >
       </textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
-          describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
+          describe your stay with at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>.
         </p>
         <button className="reviews__submit form__submit button" type="submit" disabled={!isFormValid}>
           Submit
