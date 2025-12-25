@@ -1,4 +1,4 @@
-import {Action} from '@reduxjs/toolkit';
+import {AnyAction} from '@reduxjs/toolkit';
 import MockAdapter from 'axios-mock-adapter';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import {configureMockStore} from '@jedmao/redux-mock-store';
@@ -21,8 +21,8 @@ import {
 } from './api-actions.ts';
 import {redirectToRoute} from './actions.ts';
 import {dropToken} from '../services/token.ts';
-import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview, makeFakeUserData} from '../test-helpers/mock-data.ts';
-import {makeFakeState} from '../test-helpers/mock-state.ts';
+import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview, makeFakeUserData} from '../mocks/mock-data.ts';
+import {makeFakeState} from '../mocks/mock-state.ts';
 
 vi.mock('../services/token', () => ({
   saveToken: vi.fn(),
@@ -36,14 +36,15 @@ vi.mock('react-toastify', () => ({
   },
 }));
 
-type AppThunkDispatch = ThunkDispatch<State, AxiosInstance, Action>;
+type AppThunkDispatch = ThunkDispatch<State, AxiosInstance, AnyAction>;
 
 const api = createAPI();
 const mockAxiosAdapter = new MockAdapter(api);
 const middlewares = [thunk.withExtraArgument(api)];
-const mockStore = configureMockStore<State, Action<string>, AppThunkDispatch>(middlewares);
+const mockStore = configureMockStore<State, AnyAction, AppThunkDispatch>(middlewares);
 
 const initialState = makeFakeState();
+const getActionTypes = (actions: {type: string}[]) => actions.map(({type}) => type);
 
 describe('Async operations', () => {
   beforeEach(() => {
@@ -58,11 +59,12 @@ describe('Async operations', () => {
     await store.dispatch(fetchOffersAction());
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       fetchOffersAction.pending.type,
       fetchOffersAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(offers);
+    const fulfilledAction = actions[1] as ReturnType<typeof fetchOffersAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(offers);
   });
 
   it('fetchOffersNearbyAction should dispatch pending and fulfilled', async () => {
@@ -73,11 +75,12 @@ describe('Async operations', () => {
     await store.dispatch(fetchOffersNearbyAction('1'));
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       fetchOffersNearbyAction.pending.type,
       fetchOffersNearbyAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(offers);
+    const fulfilledAction = actions[1] as ReturnType<typeof fetchOffersNearbyAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(offers);
   });
 
   it('fetchOfferAction should dispatch pending and fulfilled', async () => {
@@ -88,11 +91,12 @@ describe('Async operations', () => {
     await store.dispatch(fetchOfferAction(offer.id));
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       fetchOfferAction.pending.type,
       fetchOfferAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(offer);
+    const fulfilledAction = actions[1] as ReturnType<typeof fetchOfferAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(offer);
   });
 
   it('fetchReviewsAction should dispatch pending and fulfilled', async () => {
@@ -103,11 +107,12 @@ describe('Async operations', () => {
     await store.dispatch(fetchReviewsAction('1'));
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       fetchReviewsAction.pending.type,
       fetchReviewsAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(reviews);
+    const fulfilledAction = actions[1] as ReturnType<typeof fetchReviewsAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(reviews);
   });
 
   it('fetchFavoritesAction should dispatch pending and fulfilled', async () => {
@@ -118,11 +123,12 @@ describe('Async operations', () => {
     await store.dispatch(fetchFavoritesAction());
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       fetchFavoritesAction.pending.type,
       fetchFavoritesAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(favorites);
+    const fulfilledAction = actions[1] as ReturnType<typeof fetchFavoritesAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(favorites);
   });
 
   it('changeFavoritesStatusAction should dispatch redirect on 401', async () => {
@@ -131,7 +137,7 @@ describe('Async operations', () => {
 
     await store.dispatch(changeFavoritesStatusAction({offerId: '1', status: 1}));
 
-    const actions = store.getActions().map(({type}) => type);
+    const actions = getActionTypes(store.getActions());
     expect(actions).toEqual([
       changeFavoritesStatusAction.pending.type,
       changeFavoritesStatusAction.rejected.type,
@@ -146,11 +152,12 @@ describe('Async operations', () => {
     await store.dispatch(changeFavoritesStatusAction({offerId: 'fav', status: 1}));
 
     const actions = store.getActions();
-    expect(actions.map(({type}) => type)).toEqual([
+    expect(getActionTypes(actions)).toEqual([
       changeFavoritesStatusAction.pending.type,
       changeFavoritesStatusAction.fulfilled.type,
     ]);
-    expect(actions[1].payload).toEqual(offer);
+    const fulfilledAction = actions[1] as ReturnType<typeof changeFavoritesStatusAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(offer);
   });
 
   it('checkAuthAction should dispatch favorites fetch before fulfilled', async () => {
@@ -162,7 +169,7 @@ describe('Async operations', () => {
 
     await store.dispatch(checkAuthAction());
 
-    const actions = store.getActions().map(({type}) => type);
+    const actions = getActionTypes(store.getActions());
     expect(actions).toEqual([
       checkAuthAction.pending.type,
       fetchFavoritesAction.pending.type,
@@ -180,7 +187,7 @@ describe('Async operations', () => {
 
     await store.dispatch(loginAction({login: user.email, password: '123456', redirectTo: AppRoute.Favorites}));
 
-    const actions = store.getActions().map(({type}) => type);
+    const actions = getActionTypes(store.getActions());
     expect(actions).toEqual([
       loginAction.pending.type,
       fetchFavoritesAction.pending.type,
@@ -196,7 +203,7 @@ describe('Async operations', () => {
 
     await store.dispatch(logoutAction());
 
-    const actions = store.getActions().map(({type}) => type);
+    const actions = getActionTypes(store.getActions());
     expect(actions).toEqual([
       logoutAction.pending.type,
       logoutAction.fulfilled.type,
@@ -211,11 +218,12 @@ describe('Async operations', () => {
 
     await store.dispatch(addCommentAction({comment: review.comment, rating: review.rating, id: '1'}));
 
-    const actions = store.getActions().map(({type}) => type);
+    const actions = getActionTypes(store.getActions());
     expect(actions).toEqual([
       addCommentAction.pending.type,
       addCommentAction.fulfilled.type,
     ]);
-    expect(store.getActions()[1].payload).toEqual(review);
+    const fulfilledAction = store.getActions()[1] as ReturnType<typeof addCommentAction.fulfilled>;
+    expect(fulfilledAction.payload).toEqual(review);
   });
 });

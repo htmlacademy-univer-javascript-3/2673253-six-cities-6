@@ -1,5 +1,5 @@
 import {Review} from '../../types/review.ts';
-import {getRatingWidth} from '../../infrastructure/get-rating-width.ts';
+import {getRatingWidth} from '../../utils/get-rating-width.ts';
 
 type reviewItemProps = {
   review: Review;

@@ -8,7 +8,7 @@ import NotFoundScreen from '../../pages/not-found-screen/not-found-screen.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
 import {useAppSelector} from '../../hooks';
 import LoadingScreen from '../../pages/loading-screen/loading-screen.tsx';
-import browserHistory from '../../browser-history.ts';
+import browserHistory from '../../utils/browser-history.ts';
 import HistoryRouter from '../history-router/history-router.tsx';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {getIsOffersDataLoading} from '../../store/offers-process/selectors.ts';

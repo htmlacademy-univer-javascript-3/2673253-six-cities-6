@@ -6,17 +6,17 @@ import {Provider} from 'react-redux';
 import {Action} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {vi} from 'vitest';
+import {createMemoryHistory} from 'history';
 import App from './app';
 import {AppRoute, AuthorizationStatus, NameSpace} from '../../const.ts';
 import {State} from '../../types/state.ts';
-import {makeFakeUserData} from '../../test-helpers/mock-data.ts';
-import {makeFakeOffersProcessState, makeFakeState} from '../../test-helpers/mock-state.ts';
+import {makeFakeUserData} from '../../mocks/mock-data.ts';
+import {makeFakeOffersProcessState, makeFakeState, makeFakeUserProcessState} from '../../mocks/mock-state.ts';
 
-vi.mock('../../browser-history.ts', () => {
-  const {createMemoryHistory} = require('history');
-  return {default: createMemoryHistory()};
-});
-import browserHistory from '../../browser-history.ts';
+vi.mock('../../browser-history.ts', () => ({
+  default: createMemoryHistory(),
+}));
+import browserHistory from '../../utils/browser-history.ts';
 
 vi.mock('../../pages/main-screen/main-screen', () => ({
   default: () => <div>Main page</div>,
@@ -44,9 +44,9 @@ const middlewares = [thunk];
 const mockStore = configureMockStore<State, Action<string>, AppThunkDispatch>(middlewares);
 
 const baseState = makeFakeState({
-  [NameSpace.User]: {
+  [NameSpace.User]: makeFakeUserProcessState({
     authorizationStatus: AuthorizationStatus.NoAuth,
-  },
+  }),
   [NameSpace.Offers]: makeFakeOffersProcessState({isOfferDataLoading: false}),
 });
 
@@ -82,12 +82,12 @@ describe('Application Routing', () => {
     browserHistory.push(AppRoute.Favorites);
     renderWithStore({
       ...baseState,
-      [NameSpace.User]: {
+      [NameSpace.User]: makeFakeUserProcessState({
         authorizationStatus: AuthorizationStatus.Auth,
         user: makeFakeUserData(),
         userFavoritesCount: 0,
-      },
-    } as State);
+      }),
+    });
 
     expect(screen.getByText('Favorites page')).toBeInTheDocument();
   });

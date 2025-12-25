@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {SortingOption} from '../../const.ts';
-import {makeFakeCity} from '../../test-helpers/mock-data.ts';
-import {makeFakeSettingsProcessState} from '../../test-helpers/mock-state.ts';
+import {makeFakeCity} from '../../mocks/mock-data.ts';
+import {makeFakeSettingsProcessState} from '../../mocks/mock-state.ts';
 import {changeCity, changeSorting, settingsProcess} from './settings-process.ts';
 
 describe('settingsProcess reducer', () => {
