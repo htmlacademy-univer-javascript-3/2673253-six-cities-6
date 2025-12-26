@@ -1,8 +1,9 @@
 import React from 'react';
 import {useState} from 'react';
-import {addCommentAction} from '../../store/api-actions.ts';
+import {addCommentAction} from '../../store/api-actions/api-actions.ts';
 import {useAppDispatch} from '../../hooks';
-import {MAX_REVIEW_LENGTH, MIN_REVIEW_LENGTH, RATING_STARS, RATING_TITLES} from '../../const.ts';
+import {MAX_REVIEW_LENGTH, MIN_REVIEW_LENGTH, RATING_STARS, RATING_TITLES, REVIEW_SUBMIT_ERROR_TEXT} from '../../const.ts';
+import {toast} from 'react-toastify';
 
 type ReviewFormProps = {
   offerId: string;
@@ -13,6 +14,7 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
     rating: 0,
     comment: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -33,17 +35,23 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    await dispatch(addCommentAction({
-      id: offerId,
-      rating: formData.rating,
-      comment: formData.comment,
-    })).unwrap();
+    try {
+      setIsSubmitting(true);
+      await dispatch(addCommentAction({
+        id: offerId,
+        rating: formData.rating,
+        comment: formData.comment,
+      })).unwrap();
 
-
-    setFormData({
-      rating: 0,
-      comment: '',
-    });
+      setFormData({
+        rating: 0,
+        comment: '',
+      });
+    } catch (error) {
+      toast.warn(REVIEW_SUBMIT_ERROR_TEXT);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isFormValid = formData.rating > 0 && formData.comment.length >= MIN_REVIEW_LENGTH && formData.comment.length <= MAX_REVIEW_LENGTH;
@@ -62,6 +70,7 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
               type="radio"
               checked={formData.rating === star}
               onChange={handleRatingChange}
+              disabled={isSubmitting}
             />
             <label
               htmlFor={`${star}-stars`}
@@ -81,6 +90,7 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
         onChange={handleCommentChange}
         maxLength={MAX_REVIEW_LENGTH}
         minLength={MIN_REVIEW_LENGTH}
+        disabled={isSubmitting}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -88,7 +98,7 @@ function ReviewForm({offerId}: ReviewFormProps) : JSX.Element {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!isFormValid}>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!isFormValid || isSubmitting}>
           Submit
         </button>
       </div>

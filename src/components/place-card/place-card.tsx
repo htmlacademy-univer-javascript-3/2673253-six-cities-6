@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import {memo, useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {changeFavoritesStatusAction} from '../../store/api-actions.ts';
+import {changeFavoritesStatusAction} from '../../store/api-actions/api-actions.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
 import {redirectToRoute} from '../../store/actions.ts';

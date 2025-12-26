@@ -1,3 +1,5 @@
+import {City} from './types/city.ts';
+
 export enum AppRoute {
   Main = '/',
   Login = '/login',
@@ -71,4 +73,9 @@ export const RATING_TITLES: Record<number, string> = {
 export const MIN_REVIEW_LENGTH = 50;
 export const MAX_REVIEW_LENGTH = 300;
 export const MAX_REVIEWS_PER_PAGE = 10;
-import {City} from './types/city.ts';
+export const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+export const PASSWORD_REQUIREMENTS_TEXT = 'Password must contain at least one letter and one number';
+export const OFFER_IMAGES_LIMIT = 6;
+export const NEARBY_OFFERS_LIMIT = 3;
+export const REVIEW_SUBMIT_ERROR_TEXT = 'Failed to submit review. Please try again.';
+export const SERVER_UNAVAILABLE_TEXT = 'Server is unavailable. Please try again later.';

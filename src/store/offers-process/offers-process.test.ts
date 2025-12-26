@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {changeFavoritesStatusAction, fetchFavoritesAction, fetchOfferAction, fetchOffersAction, fetchOffersNearbyAction, fetchReviewsAction} from '../api-actions.ts';
+import {changeFavoritesStatusAction, fetchFavoritesAction, fetchOfferAction, fetchOffersAction, fetchOffersNearbyAction, fetchReviewsAction} from '../api-actions/api-actions.ts';
 import {offersProcess} from './offers-process.ts';
 import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview} from '../../mocks/mock-data.ts';
 import {makeFakeOffersProcessState} from '../../mocks/mock-state.ts';
@@ -53,17 +53,23 @@ describe('offersProcess reducer', () => {
   });
 
   it('should handle current offer loading', () => {
-    const pendingState = offersProcess.reducer(initialState, {type: fetchOfferAction.pending.type});
+    const pendingState = offersProcess.reducer(initialState, {type: fetchOfferAction.pending.type, meta: {arg: '1'}});
     expect(pendingState.isOfferDataLoading).toBe(true);
+    expect(pendingState.currentOfferId).toBe('1');
 
     const offerInfo = makeFakeOfferWithInfo();
     const fulfilledState = offersProcess.reducer(initialState, {type: fetchOfferAction.fulfilled.type, payload: offerInfo});
     expect(fulfilledState.isOfferDataLoading).toBe(false);
     expect(fulfilledState.currentOffer).toEqual(offerInfo);
+    expect(fulfilledState.currentOfferId).toBe(offerInfo.id);
 
-    const rejectedState = offersProcess.reducer({...initialState, currentOffer: offerInfo}, {type: fetchOfferAction.rejected.type});
+    const rejectedState = offersProcess.reducer(
+      {...initialState, currentOffer: offerInfo},
+      {type: fetchOfferAction.rejected.type, meta: {arg: 'unknown-id'}}
+    );
     expect(rejectedState.isOfferDataLoading).toBe(false);
     expect(rejectedState.currentOffer).toBeNull();
+    expect(rejectedState.currentOfferId).toBe('unknown-id');
   });
 
   it('should handle reviews loading', () => {

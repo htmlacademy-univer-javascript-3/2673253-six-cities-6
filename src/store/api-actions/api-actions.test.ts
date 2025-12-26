@@ -4,9 +4,9 @@ import thunk, {ThunkDispatch} from 'redux-thunk';
 import {configureMockStore} from '@jedmao/redux-mock-store';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AxiosInstance} from 'axios';
-import {APIRoute, AppRoute} from '../const.ts';
-import {State} from '../types/state.ts';
-import {createAPI} from '../services/api.ts';
+import {APIRoute, AppRoute} from '../../const.ts';
+import {State} from '../../types/state.ts';
+import {createAPI} from '../../services/api.ts';
 import {
   addCommentAction,
   changeFavoritesStatusAction,
@@ -19,12 +19,12 @@ import {
   loginAction,
   logoutAction
 } from './api-actions.ts';
-import {redirectToRoute} from './actions.ts';
-import {dropToken} from '../services/token.ts';
-import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview, makeFakeUserData} from '../mocks/mock-data.ts';
-import {makeFakeState} from '../mocks/mock-state.ts';
+import {redirectToRoute} from '../actions.ts';
+import {dropToken} from '../../services/token.ts';
+import {makeFakeOffer, makeFakeOfferWithInfo, makeFakeReview, makeFakeUserData} from '../../mocks/mock-data.ts';
+import {makeFakeState} from '../../mocks/mock-state.ts';
 
-vi.mock('../services/token', () => ({
+vi.mock('../../services/token.ts', () => ({
   saveToken: vi.fn(),
   dropToken: vi.fn(),
   getToken: vi.fn(),

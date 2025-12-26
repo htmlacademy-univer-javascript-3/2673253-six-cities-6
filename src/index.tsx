@@ -4,7 +4,7 @@ import App from './components/app/app.tsx';
 import {Provider} from 'react-redux';
 import {store} from './store';
 import {ToastContainer} from 'react-toastify';
-import {checkAuthAction, fetchOffersAction} from './store/api-actions';
+import {checkAuthAction, fetchOffersAction} from './store/api-actions/api-actions.ts';
 import 'react-toastify/dist/ReactToastify.css';
 
 

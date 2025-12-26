@@ -1,12 +1,13 @@
 import LoginHeader from '../../components/header/login-header.tsx';
 import {FormEvent, useMemo, useRef} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {loginAction} from '../../store/api-actions.ts';
-import {Link, Navigate, useLocation} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, DEFAULT_SORTING} from '../../const.ts';
+import {loginAction} from '../../store/api-actions/api-actions.ts';
+import {Link, Navigate} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus, DEFAULT_SORTING, PASSWORD_REQUIREMENTS_TEXT} from '../../const.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import Cities from '../../mocks/cities.ts';
 import {changeCity, changeSorting} from '../../store/settings-process/settings-process.ts';
+import isPasswordValid from '../../utils/is-password-valid.ts';
 
 function LoginScreen(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -15,25 +16,30 @@ function LoginScreen(): JSX.Element {
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useAppDispatch();
-  const location = useLocation();
   const randomCity = useMemo(() => Cities[Math.floor(Math.random() * Cities.length)], []);
 
-  const fromRoute =
-    (location.state as { from?: AppRoute })?.from
-    ?? AppRoute.Main;
-
   if (authorizationStatus === AuthorizationStatus.Auth) {
-    return <Navigate to={fromRoute} replace/>;
+    return <Navigate to={AppRoute.Main} replace/>;
   }
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
+      const password = passwordRef.current.value;
+      const passwordIsValid = isPasswordValid(password);
+
+      if (!passwordIsValid) {
+        passwordRef.current.setCustomValidity(PASSWORD_REQUIREMENTS_TEXT);
+        passwordRef.current.reportValidity();
+        return;
+      }
+
+      passwordRef.current.setCustomValidity('');
       dispatch(loginAction({
         login: loginRef.current.value,
-        password: passwordRef.current.value,
-        redirectTo: fromRoute,
+        password,
+        redirectTo: AppRoute.Main,
       }));
     }
   };
@@ -74,6 +80,7 @@ function LoginScreen(): JSX.Element {
                   id="password"
                   placeholder="Password"
                   required
+                  onInput={() => passwordRef.current?.setCustomValidity('')}
                 />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>

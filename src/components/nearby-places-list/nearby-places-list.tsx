@@ -1,13 +1,11 @@
 import PlaceCard from '../place-card/place-card.tsx';
 import {useAppSelector} from '../../hooks';
 import {getOffersNearby} from '../../store/offers-process/selectors.ts';
+import {NEARBY_OFFERS_LIMIT} from '../../const.ts';
 
-type NearbyPlacesListProps = {
-  onListItemHover: (id: string | null) => void;
-}
 
-function NearbyPlacesList({onListItemHover}: NearbyPlacesListProps) {
-  const places = useAppSelector(getOffersNearby);
+function NearbyPlacesList() {
+  const places = useAppSelector(getOffersNearby).slice(0, NEARBY_OFFERS_LIMIT);
 
   return (
     <div className="near-places__list places__list">
@@ -15,7 +13,7 @@ function NearbyPlacesList({onListItemHover}: NearbyPlacesListProps) {
         <PlaceCard
           offer={place}
           key={place.id}
-          onHover={onListItemHover}
+          onHover={() => undefined}
           className={'near-places'}
         />
       ))}

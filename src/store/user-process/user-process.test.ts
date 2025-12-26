@@ -6,7 +6,7 @@ import {
   fetchFavoritesAction,
   loginAction,
   logoutAction
-} from '../api-actions.ts';
+} from '../api-actions/api-actions.ts';
 import {userProcess} from './user-process.ts';
 import {makeFakeUserProcessState} from '../../mocks/mock-state.ts';
 

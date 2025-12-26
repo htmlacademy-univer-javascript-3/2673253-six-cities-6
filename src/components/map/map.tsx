@@ -4,12 +4,12 @@ import {useEffect, useMemo, useRef} from 'react';
 import useMap from '../../hooks/use-map.ts';
 import {MAP_ICON_ANCHOR, MAP_ICON_SIZE, URL_MARKER_CURRENT, URL_MARKER_DEFAULT} from '../../const.ts';
 import {useAppSelector} from '../../hooks';
-import {Offer} from '../../types/offer.ts';
 import {getCurrentCity} from '../../store/settings-process/selectors.ts';
+import {MapPoint} from '../../types/map-point.ts';
 
 
 type mapProps = {
-  locations: Offer[];
+  locations: MapPoint[];
   activeId: string | null;
   className: string;
 }

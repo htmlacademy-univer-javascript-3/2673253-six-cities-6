@@ -9,6 +9,7 @@ export const getOffers = (state: State) => state[NameSpace.Offers].offers;
 export const getOffersNearby = (state: State) => state[NameSpace.Offers].offersNearby;
 export const getFavoriteOffers = (state: State) => state[NameSpace.Offers].favoriteOffers;
 export const getCurrentOffer = (state: State) => state[NameSpace.Offers].currentOffer;
+export const getCurrentOfferId = (state: State) => state[NameSpace.Offers].currentOfferId;
 export const getCurrentReviews = (state: State) => state[NameSpace.Offers].currentReviews;
 export const getIsOffersDataLoading = (state: State) => state[NameSpace.Offers].isOffersDataLoading;
 export const getIsOffersNearbyDataLoading = (state: State) => state[NameSpace.Offers].isOffersNearbyDataLoading;
