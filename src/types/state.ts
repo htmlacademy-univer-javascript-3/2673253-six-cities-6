@@ -22,6 +22,7 @@ export type OffersProcess = {
   offersNearby: Offer[];
   favoriteOffers: Offer[];
   currentOffer: OfferWithInfo | null;
+  currentOfferId: string | null;
   currentReviews: Review[];
   isOffersDataLoading: boolean;
   isOffersNearbyDataLoading: boolean;

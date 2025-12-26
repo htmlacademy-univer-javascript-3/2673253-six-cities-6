@@ -1,16 +1,16 @@
 import {AxiosError, AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AppDispatch, State} from '../types/state.ts';
-import {saveToken, dropToken} from '../services/token';
-import {AuthData} from '../types/auth-data';
-import {UserData} from '../types/user-data';
-import {Offer} from '../types/offer.ts';
-import {APIRoute, AppRoute} from '../const.ts';
-import {redirectToRoute} from './actions.ts';
-import {OfferWithInfo} from '../types/offer-with-info.ts';
-import {Review} from '../types/review.ts';
-import {ReviewData} from '../types/review-data.ts';
-import {FavoriteData} from '../types/favorite-data.ts';
+import {AppDispatch, State} from '../../types/state.ts';
+import {saveToken, dropToken} from '../../services/token.ts';
+import {AuthData} from '../../types/auth-data.ts';
+import {UserData} from '../../types/user-data.ts';
+import {Offer} from '../../types/offer.ts';
+import {APIRoute, AppRoute} from '../../const.ts';
+import {redirectToRoute} from '../actions.ts';
+import {OfferWithInfo} from '../../types/offer-with-info.ts';
+import {Review} from '../../types/review.ts';
+import {ReviewData} from '../../types/review-data.ts';
+import {FavoriteData} from '../../types/favorite-data.ts';
 import {StatusCodes} from 'http-status-codes';
 
 

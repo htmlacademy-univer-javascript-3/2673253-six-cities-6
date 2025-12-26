@@ -6,7 +6,7 @@ import {
   fetchFavoritesAction,
   loginAction,
   logoutAction
-} from '../api-actions.ts';
+} from '../api-actions/api-actions.ts';
 import {UserProcess} from '../../types/state.ts';
 
 const initialState: UserProcess = {

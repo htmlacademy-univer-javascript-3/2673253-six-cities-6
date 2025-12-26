@@ -10,13 +10,14 @@ import {
   fetchOffersNearbyAction,
   fetchReviewsAction,
   logoutAction
-} from '../api-actions.ts';
+} from '../api-actions/api-actions.ts';
 
 const initialState: OffersProcess = {
   offers: [],
   offersNearby: [],
   favoriteOffers: [],
   currentOffer: null,
+  currentOfferId: null,
   currentReviews: [],
   isOffersDataLoading: false,
   isOffersNearbyDataLoading: false,
@@ -52,23 +53,26 @@ export const offersProcess = createSlice({
         state.isOffersNearbyDataLoading = false;
         state.offersNearby = [];
       })
-      .addCase(fetchOfferAction.pending, (state) => {
+      .addCase(fetchOfferAction.pending, (state, action) => {
         state.isOfferDataLoading = true;
+        state.currentOfferId = action.meta.arg;
       })
       .addCase(fetchOfferAction.fulfilled, (state, action) => {
         state.isOfferDataLoading = false;
         state.currentOffer = action.payload;
+        state.currentOfferId = action.payload.id;
       })
-      .addCase(fetchOfferAction.rejected, (state) => {
+      .addCase(fetchOfferAction.rejected, (state, action) => {
         state.isOfferDataLoading = false;
         state.currentOffer = null;
+        state.currentOfferId = action.meta.arg;
       })
       .addCase(fetchReviewsAction.pending, (state) => {
         state.isReviewsDataLoading = true;
       })
       .addCase(fetchReviewsAction.fulfilled, (state, action) => {
         state.isReviewsDataLoading = false;
-        state.currentReviews = action.payload;
+        state.currentReviews = [...action.payload].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       })
       .addCase(fetchReviewsAction.rejected, (state) => {
         state.isReviewsDataLoading = false;
@@ -109,7 +113,10 @@ export const offersProcess = createSlice({
         }
       })
       .addCase(addCommentAction.fulfilled, (state, action) => {
-        state.currentReviews.push(action.payload);
+        state.currentReviews = [
+          action.payload,
+          ...state.currentReviews,
+        ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       })
       .addCase(logoutAction.fulfilled, (state) => {
         state.favoriteOffers = [];

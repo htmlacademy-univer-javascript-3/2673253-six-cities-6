@@ -25,7 +25,7 @@ describe('Component: NearbyPlacesList', () => {
   });
 
   it('should render nearby place cards', () => {
-    render(<NearbyPlacesList onListItemHover={vi.fn()} />);
+    render(<NearbyPlacesList />);
 
     expect(screen.getByText('Nearby 1')).toBeInTheDocument();
     expect(placeCardMock).toHaveBeenCalledWith(expect.objectContaining({offer: offers[0]}));

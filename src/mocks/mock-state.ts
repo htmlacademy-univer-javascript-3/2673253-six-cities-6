@@ -13,6 +13,7 @@ export const makeFakeOffersProcessState = (overrides: Partial<OffersProcess> = {
   offersNearby: [],
   favoriteOffers: [],
   currentOffer: null,
+  currentOfferId: null,
   currentReviews: [],
   isOffersDataLoading: false,
   isOffersNearbyDataLoading: false,

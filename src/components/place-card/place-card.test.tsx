@@ -20,7 +20,7 @@ vi.mock('../../hooks', () => ({
   useAppSelector: () => useAppSelectorMock() as AuthorizationStatus,
 }));
 
-vi.mock('../../store/api-actions.ts', () => ({
+vi.mock('../../store/api-actions/api-actions.ts', () => ({
   changeFavoritesStatusAction: (payload: {offerId: string; status: FavoriteStatus}) =>
     changeFavoritesStatusActionMock(payload),
 }));

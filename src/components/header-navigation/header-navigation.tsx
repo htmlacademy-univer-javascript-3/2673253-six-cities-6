@@ -1,5 +1,5 @@
 import {Link, useLocation} from 'react-router-dom';
-import {logoutAction} from '../../store/api-actions.ts';
+import {logoutAction} from '../../store/api-actions/api-actions.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {getAuthorizationStatus, getFavoritesCount, getUser} from '../../store/user-process/selectors.ts';

@@ -3,27 +3,29 @@ import {Navigate, useParams} from 'react-router-dom';
 import Header from '../../components/header/header.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import NearbyPlacesList from '../../components/nearby-places-list/nearby-places-list.tsx';
-import {changeFavoritesStatusAction, fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../../store/api-actions.ts';
-import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
+import {changeFavoritesStatusAction, fetchOfferAction, fetchOffersNearbyAction, fetchReviewsAction} from '../../store/api-actions/api-actions.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus, NEARBY_OFFERS_LIMIT, OFFER_IMAGES_LIMIT} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import LoadingScreen from '../loading-screen/loading-screen.tsx';
+import {MapPoint} from '../../types/map-point.ts';
 import {
   getCurrentOffer,
   getCurrentReviews,
   getIsOfferDataLoading,
   getIsOffersNearbyDataLoading,
   getIsReviewsDataLoading,
-  getOffersNearby
+  getOffersNearby,
+  getCurrentOfferId
 } from '../../store/offers-process/selectors.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {redirectToRoute} from '../../store/actions.ts';
 import {getRatingWidth} from '../../utils/get-rating-width.ts';
+import getAdultsLabel from '../../utils/get-adults-label.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
-  const [activeId, setActiveId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (id) {
@@ -34,8 +36,18 @@ function OfferScreen(): JSX.Element {
   }, [dispatch, id]);
 
   const offer = useAppSelector(getCurrentOffer);
+  const currentOfferId = useAppSelector(getCurrentOfferId);
   const reviews = useAppSelector(getCurrentReviews);
   const offersNearby = useAppSelector(getOffersNearby);
+  const nearbyLimited = useMemo(() => offersNearby.slice(0, NEARBY_OFFERS_LIMIT), [offersNearby]);
+  const mapLocations: MapPoint[] = useMemo(
+    () => offer ? [offer, ...nearbyLimited].map((item) => ({
+      id: item.id,
+      location: item.location,
+      city: item.city,
+    })) : [],
+    [offer, nearbyLimited]
+  );
 
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
@@ -66,14 +78,21 @@ function OfferScreen(): JSX.Element {
     return <Navigate to={AppRoute.NotFound} />;
   }
 
+  const isCurrentOfferMatched = offer?.id === id;
+
   if (isOfferDataLoading) {
     return (
       <LoadingScreen/>
     );
   }
 
-  if (!offer) {
-    return <Navigate to={AppRoute.NotFound} />;
+  if (!isCurrentOfferMatched) {
+    if (currentOfferId === id) {
+      return <Navigate to={AppRoute.NotFound} />;
+    }
+    return (
+      <LoadingScreen/>
+    );
   }
 
   if (isOffersNearbyDataLoading || isReviewsDataLoading) {
@@ -81,6 +100,7 @@ function OfferScreen(): JSX.Element {
       <LoadingScreen/>
     );
   }
+
   return (
     <div className="page">
       <Header isMain={false}/>
@@ -89,13 +109,11 @@ function OfferScreen(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {
-                offer.images.map((picture) => (
-                  <div className="offer__image-wrapper" key={picture}>
-                    <img className="offer__image" src={picture} alt="Photo studio"/>
-                  </div>
-                ))
-              }
+              {offer.images.slice(0, OFFER_IMAGES_LIMIT).map((picture) => (
+                <div className="offer__image-wrapper" key={picture}>
+                  <img className="offer__image" src={picture} alt="Photo studio"/>
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
@@ -141,7 +159,7 @@ function OfferScreen(): JSX.Element {
                   {`${offer.bedrooms} Bedroom${offer.bedrooms > 1 ? 's' : ''}`}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults
+                  {getAdultsLabel(offer.maxAdults)}
                 </li>
               </ul>
               <div className="offer__price">
@@ -196,12 +214,12 @@ function OfferScreen(): JSX.Element {
               </section>
             </div>
           </div>
-          <Map locations={offersNearby} activeId={activeId} className="offer"/>
+          <Map locations={mapLocations} activeId={offer.id} className="offer"/>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearbyPlacesList onListItemHover={setActiveId}/>
+            <NearbyPlacesList />
           </section>
         </div>
       </main>

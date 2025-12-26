@@ -15,7 +15,7 @@ vi.mock('../../hooks', () => ({
   useAppDispatch: () => useAppDispatchMock(),
 }));
 
-vi.mock('../../store/api-actions.ts', () => ({
+vi.mock('../../store/api-actions/api-actions.ts', () => ({
   addCommentAction: (payload: {id: string; rating: number; comment: string}) => addCommentActionMock(payload),
 }));
 
